@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HB Digital | Build Your Digital Identity</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#020617;
+color:#fff;
+overflow-x:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 30%,rgba(37,99,235,.25),transparent 30%),
+radial-gradient(circle at 80% 70%,rgba(56,189,248,.18),transparent 30%);
+z-index:-1;
+}
+
+header{
+position:fixed;
+width:100%;
+top:0;
+left:0;
+padding:20px 8%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(2,6,23,.8);
+backdrop-filter:blur(12px);
+z-index:1000;
+border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo{
+font-size:30px;
+font-weight:700;
+color:#38bdf8;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:30px;
+font-size:15px;
+transition:.3s;
+}
+
+nav a:hover{
+color:#38bdf8;
+}
+
+.hero{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:0 20px;
+}
+
+.hero-content{
+max-width:900px;
+}
+
+.hero h1{
+font-size:72px;
+line-height:1.1;
+margin-bottom:20px;
+}
+
+.hero h1 span{
+color:#38bdf8;
+}
+
+.hero p{
+font-size:22px;
+color:#cbd5e1;
+line-height:1.8;
+margin-bottom:40px;
+}
+
+.btn{
+display:inline-block;
+padding:16px 36px;
+margin:10px;
+border-radius:12px;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.btn-primary{
+background:#2563eb;
+color:white;
+}
+
+.btn-primary:hover{
+transform:translateY(-3px);
+box-shadow:0 0 25px rgba(37,99,235,.6);
+}
+
+.btn-outline{
+border:2px solid #38bdf8;
+color:#38bdf8;
+}
+
+.btn-outline:hover{
+background:#38bdf8;
+color:#020617;
+}
+
+section{
+padding:120px 10%;
+}
+
+.section-title{
+font-size:48px;
+text-align:center;
+margin-bottom:60px;
+}
+
+.section-title span{
+color:#38bdf8;
+}
+
+.about{
+max-width:900px;
+margin:auto;
+text-align:center;
+line-height:2;
+font-size:18px;
+color:#cbd5e1;
+}
+
+.services{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+}
+
+.card{
+background:#0f172a;
+padding:35px;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.08);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+border-color:#38bdf8;
+}
+
+.card h3{
+margin-bottom:15px;
+color:#38bdf8;
+}
+
+.card p{
+color:#cbd5e1;
+line-height:1.8;
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+text-align:center;
+}
+
+.feature{
+background:#0f172a;
+padding:30px;
+border-radius:20px;
+}
+
+.feature h3{
+margin-bottom:10px;
+color:#38bdf8;
+}
+
+.founder{
+max-width:800px;
+margin:auto;
+text-align:center;
+background:#0f172a;
+padding:50px;
+border-radius:25px;
+}
+
+.founder h3{
+font-size:34px;
+margin-bottom:10px;
+}
+
+.founder p{
+color:#cbd5e1;
+line-height:2;
+}
+
+.contact{
+text-align:center;
+}
+
+.contact-box{
+max-width:700px;
+margin:auto;
+padding:50px;
+background:#0f172a;
+border-radius:25px;
+}
+
+.contact-box p{
+margin:15px 0;
+font-size:18px;
+}
+
+footer{
+text-align:center;
+padding:40px;
+border-top:1px solid rgba(255,255,255,.08);
+color:#94a3b8;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:42px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+.section-title{
+font-size:36px;
+}
+
+nav{
+display:none;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">HB Digital</div>
+
+<nav>
+<a href="#about">关于</a>
+<a href="#services">服务</a>
+<a href="#why">优势</a>
+<a href="#founder">创始人</a>
+<a href="#contact">联系</a>
+</nav>
+
+</header>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+Build Your
+<span>Digital Identity</span>
+</h1>
+
+<p>
+用技术帮助每个人拥有属于自己的专业网站。<br>
+为学生、求职者、创作者和自由职业者打造高质量个人品牌官网。
+</p>
+
+<a href="#contact" class="btn btn-primary">开始合作</a>
+
+<a href="#services" class="btn btn-outline">查看服务</a>
+
+</div>
+
+</section>
+
+<section id="about">
+
+<h2 class="section-title">
+关于 <span>HB Digital</span>
+</h2>
+
+<div class="about">
+
+HB Digital 由创始人贵浩滨创立。
+
+我们专注于个人品牌官网建设，
+帮助个人建立专业、可信且具有现代设计感的网络形象。
+
+无论你是大学生、求职者、程序员、设计师、
+摄影师、自媒体创作者还是自由职业者，
+都值得拥有属于自己的专业网站。
+
+<br><br>
+
+我们的使命：
+
+<strong>用技术帮助每个人拥有属于自己的专业网站。</strong>
+
+</div>
+
+</section>
+
+<section id="services">
+
+<h2 class="section-title">
+我们的 <span>服务</span>
+</h2>
+
+<div class="services">
+
+<div class="card">
+<h3>个人简历网站</h3>
+<p>
+展示教育背景、项目经历、技能证书和个人优势。
+</p>
+</div>
+
+<div class="card">
+<h3>个人品牌官网</h3>
+<p>
+打造专业个人形象，建立可信的网络品牌。
+</p>
+</div>
+
+<div class="card">
+<h3>作品集网站</h3>
+<p>
+展示设计作品、开发项目和个人成果。
+</p>
+</div>
+
+<div class="card">
+<h3>网站部署维护</h3>
+<p>
+域名配置、服务器部署、网站更新与维护。
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="why">
+
+<h2 class="section-title">
+为什么选择 <span>HB Digital</span>
+</h2>
+
+<div class="features">
+
+<div class="feature">
+<h3>专业设计</h3>
+<p>现代化科技风视觉设计</p>
+</div>
+
+<div class="feature">
+<h3>快速交付</h3>
+<p>高效完成项目开发</p>
+</div>
+
+<div class="feature">
+<h3>响应式布局</h3>
+<p>电脑手机全面适配</p>
+</div>
+
+<div class="feature">
+<h3>长期维护</h3>
+<p>持续提供技术支持</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="founder">
+
+<h2 class="section-title">
+创始人 <span>Founder</span>
+</h2>
+
+<div class="founder">
+
+<h3>贵浩滨</h3>
+
+<p>
+
+Founder & Developer
+
+<br><br>
+
+河北工程大学
+
+信息与计算科学专业
+
+<br><br>
+
+专注于：
+
+Web Development
+
+Personal Branding
+
+Digital Solutions
+
+<br><br>
+
+希望通过技术帮助更多人建立属于自己的网络品牌形象。
+
+</p>
+
+</div>
+
+</section>
+
+<section id="contact">
+
+<h2 class="section-title">
+联系 <span>我们</span>
+</h2>
+
+<div class="contact-box">
+
+<p><strong>品牌：</strong>HB Digital</p>
+
+<p><strong>创始人：</strong>贵浩滨</p>
+
+<p><strong>Email：</strong>2195154945@qq.com</p>
+
+<p><strong>业务方向：</strong>Personal Website Development</p>
+
+<p><strong>Slogan：</strong>Build Your Digital Identity</p>
+
+</div>
+
+</section>
+
+<footer>
+
+HB Digital © 2026
+
+<br>
+
+Build Your Digital Identity
+
+</footer>
+
+</body>
+</html>
