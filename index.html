@@ -3,476 +3,403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HB Digital 专注个人品牌官网建设，为学生、求职者、创作者与自由职业者打造现代化、可信赖的专业网络形象。">
+<meta property="og:title" content="HB Digital | Build Your Digital Identity">
+<meta property="og:description" content="用技术帮助每个人拥有属于自己的专业网站。">
+<meta property="og:type" content="website">
 <title>HB Digital | Build Your Digital Identity</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23020617'/%3E%3Ctext x='50' y='68' font-size='56' font-family='Arial' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-scroll-behavior:smooth;
+:root{
+  --bg:#020617;
+  --bg-soft:#0f172a;
+  --accent:#38bdf8;
+  --accent-2:#2563eb;
+  --text:#ffffff;
+  --muted:#cbd5e1;
+  --faint:#94a3b8;
+  --border:rgba(255,255,255,.08);
 }
+
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-background:#020617;
-color:#fff;
-overflow-x:hidden;
+  font-family:'Poppins','Noto Sans SC',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.6;
 }
 
+/* 背景网格 + 光晕 */
 body::before{
-content:'';
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:
-radial-gradient(circle at 20% 30%,rgba(37,99,235,.25),transparent 30%),
-radial-gradient(circle at 80% 70%,rgba(56,189,248,.18),transparent 30%);
-z-index:-1;
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(37,99,235,.22),transparent 32%),
+    radial-gradient(circle at 82% 78%,rgba(56,189,248,.16),transparent 34%);
+  z-index:-2;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  z-index:-1;
+  mask-image:radial-gradient(circle at 50% 30%,black,transparent 75%);
 }
 
+/* 顶部导航 */
 header{
-position:fixed;
-width:100%;
-top:0;
-left:0;
-padding:20px 8%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:rgba(2,6,23,.8);
-backdrop-filter:blur(12px);
-z-index:1000;
-border-bottom:1px solid rgba(255,255,255,.08);
+  position:fixed;
+  top:0;left:0;width:100%;
+  padding:18px 8%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(2,6,23,.72);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+  transition:padding .3s;
 }
-
 .logo{
-font-size:30px;
-font-weight:700;
-color:#38bdf8;
+  font-size:26px;font-weight:700;color:var(--accent);
+  letter-spacing:.5px;display:flex;align-items:center;gap:10px;
 }
+.logo .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);}
 
+nav{display:flex;align-items:center;gap:30px;}
 nav a{
-color:white;
-text-decoration:none;
-margin-left:30px;
-font-size:15px;
-transition:.3s;
+  color:var(--text);text-decoration:none;font-size:15px;
+  position:relative;transition:color .3s;
 }
-
-nav a:hover{
-color:#38bdf8;
+nav a::after{
+  content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;
+  background:var(--accent);transition:width .3s;
 }
+nav a:hover{color:var(--accent);}
+nav a:hover::after{width:100%;}
 
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:0;padding:6px;}
+.hamburger span{width:26px;height:2px;background:var(--text);transition:.3s;border-radius:2px;}
+
+/* 移动端菜单 */
+.mobile-menu{
+  position:fixed;inset:0;background:rgba(2,6,23,.97);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:28px;z-index:999;transform:translateY(-100%);transition:transform .35s ease;
+}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{color:var(--text);font-size:24px;text-decoration:none;}
+.mobile-menu a:hover{color:var(--accent);}
+
+/* Hero */
 .hero{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:0 20px;
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:120px 20px 60px;
 }
-
-.hero-content{
-max-width:900px;
+.hero .badge{
+  display:inline-block;padding:8px 18px;border:1px solid var(--border);
+  border-radius:999px;font-size:13px;color:var(--muted);margin-bottom:28px;
+  background:rgba(255,255,255,.03);
 }
-
 .hero h1{
-font-size:72px;
-line-height:1.1;
-margin-bottom:20px;
+  font-size:clamp(40px,8vw,76px);line-height:1.08;font-weight:700;margin-bottom:22px;
 }
-
-.hero h1 span{
-color:#38bdf8;
+.hero h1 .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb,#a855f7);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;
 }
-
+@keyframes shine{to{background-position:200% center;}}
 .hero p{
-font-size:22px;
-color:#cbd5e1;
-line-height:1.8;
-margin-bottom:40px;
+  font-size:clamp(16px,2.4vw,22px);color:var(--muted);max-width:680px;margin-bottom:38px;
 }
+.hero .cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
 
 .btn{
-display:inline-block;
-padding:16px 36px;
-margin:10px;
-border-radius:12px;
-text-decoration:none;
-font-weight:600;
-transition:.3s;
+  display:inline-block;padding:15px 34px;border-radius:12px;
+  text-decoration:none;font-weight:600;font-size:15px;transition:.3s;
 }
+.btn-primary{background:var(--accent-2);color:#fff;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(37,99,235,.5);}
+.btn-outline{border:2px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:var(--accent);color:var(--bg);transform:translateY(-3px);}
 
-.btn-primary{
-background:#2563eb;
-color:white;
+/* 通用区块 */
+section{padding:110px 10%;}
+.section-title{font-size:clamp(32px,5vw,46px);text-align:center;margin-bottom:56px;font-weight:700;}
+.section-title .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
+.about{max-width:860px;margin:auto;text-align:center;font-size:18px;color:var(--muted);}
+.about strong{color:var(--text);}
 
-.btn-primary:hover{
-transform:translateY(-3px);
-box-shadow:0 0 25px rgba(37,99,235,.6);
-}
-
-.btn-outline{
-border:2px solid #38bdf8;
-color:#38bdf8;
-}
-
-.btn-outline:hover{
-background:#38bdf8;
-color:#020617;
-}
-
-section{
-padding:120px 10%;
-}
-
-.section-title{
-font-size:48px;
-text-align:center;
-margin-bottom:60px;
-}
-
-.section-title span{
-color:#38bdf8;
-}
-
-.about{
-max-width:900px;
-margin:auto;
-text-align:center;
-line-height:2;
-font-size:18px;
-color:#cbd5e1;
-}
-
-.services{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:25px;
-}
-
+/* 卡片网格 */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;}
 .card{
-background:#0f172a;
-padding:35px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,.08);
-transition:.3s;
+  background:var(--bg-soft);padding:34px;border-radius:20px;border:1px solid var(--border);
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+}
+.card:hover{transform:translateY(-8px);border-color:var(--accent);box-shadow:0 18px 40px rgba(56,189,248,.12);}
+.card .icon{
+  width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:rgba(56,189,248,.12);color:var(--accent);margin-bottom:18px;
+}
+.card h3{margin-bottom:12px;font-size:20px;color:var(--text);}
+.card p{color:var(--muted);font-size:15px;}
+
+.features{gap:20px;}
+.feature{background:var(--bg-soft);padding:30px;border-radius:20px;text-align:center;border:1px solid var(--border);transition:.3s;}
+.feature:hover{border-color:var(--accent);transform:translateY(-6px);}
+.feature .icon{margin:0 auto 14px;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(37,99,235,.14);color:var(--accent);}
+.feature h3{color:var(--text);margin-bottom:8px;font-size:18px;}
+.feature p{color:var(--muted);font-size:14px;}
+
+/* 创始人 */
+.founder{max-width:780px;margin:auto;text-align:center;background:var(--bg-soft);padding:54px 40px;border-radius:26px;border:1px solid var(--border);}
+.avatar{
+  width:96px;height:96px;border-radius:50%;margin:0 auto 22px;
+  display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;
+  background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;
+  box-shadow:0 0 30px rgba(56,189,248,.4);
+}
+.founder h3{font-size:30px;margin-bottom:6px;}
+.founder .role{color:var(--accent);margin-bottom:20px;font-size:15px;letter-spacing:.5px;}
+.founder p{color:var(--muted);}
+
+/* 联系 */
+.contact-box{max-width:680px;margin:auto;padding:50px;background:var(--bg-soft);border-radius:26px;border:1px solid var(--border);}
+.contact-box .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;}
+.contact-box .row:last-child{border-bottom:0;}
+.contact-box .label{color:var(--faint);font-size:14px;}
+.contact-box .value{color:var(--text);font-size:16px;font-weight:500;text-align:right;}
+.copy-btn{
+  background:rgba(56,189,248,.12);color:var(--accent);border:1px solid var(--border);
+  padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.3s;
+}
+.copy-btn:hover{background:var(--accent);color:var(--bg);}
+
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--faint);font-size:14px;}
+footer .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb);
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600;
 }
 
-.card:hover{
-transform:translateY(-8px);
-border-color:#38bdf8;
+/* 回到顶部 */
+#toTop{
+  position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;
+  background:var(--accent-2);color:#fff;border:0;cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:.3s;z-index:900;box-shadow:0 10px 24px rgba(37,99,235,.5);
 }
+#toTop.show{opacity:1;visibility:visible;}
+#toTop:hover{transform:translateY(-3px);}
 
-.card h3{
-margin-bottom:15px;
-color:#38bdf8;
-}
-
-.card p{
-color:#cbd5e1;
-line-height:1.8;
-}
-
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:25px;
-text-align:center;
-}
-
-.feature{
-background:#0f172a;
-padding:30px;
-border-radius:20px;
-}
-
-.feature h3{
-margin-bottom:10px;
-color:#38bdf8;
-}
-
-.founder{
-max-width:800px;
-margin:auto;
-text-align:center;
-background:#0f172a;
-padding:50px;
-border-radius:25px;
-}
-
-.founder h3{
-font-size:34px;
-margin-bottom:10px;
-}
-
-.founder p{
-color:#cbd5e1;
-line-height:2;
-}
-
-.contact{
-text-align:center;
-}
-
-.contact-box{
-max-width:700px;
-margin:auto;
-padding:50px;
-background:#0f172a;
-border-radius:25px;
-}
-
-.contact-box p{
-margin:15px 0;
-font-size:18px;
-}
-
-footer{
-text-align:center;
-padding:40px;
-border-top:1px solid rgba(255,255,255,.08);
-color:#94a3b8;
-}
+/* 滚动入场动画 */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
 
 @media(max-width:768px){
-
-.hero h1{
-font-size:42px;
+  nav{display:none;}
+  .hamburger{display:flex;}
+  section{padding:80px 7%;}
+  .hero{padding-top:100px;}
+  .contact-box .row{flex-direction:column;align-items:flex-start;gap:4px;}
+  .contact-box .value{text-align:left;}
 }
 
-.hero p{
-font-size:18px;
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .hero h1 .grad{animation:none;}
 }
-
-.section-title{
-font-size:36px;
-}
-
-nav{
-display:none;
-}
-
-}
-
 </style>
 </head>
 
 <body>
 
-<header>
-
-<div class="logo">HB Digital</div>
-
-<nav>
-<a href="#about">关于</a>
-<a href="#services">服务</a>
-<a href="#why">优势</a>
-<a href="#founder">创始人</a>
-<a href="#contact">联系</a>
-</nav>
-
+<header id="header">
+  <div class="logo"><span class="dot"></span>HB Digital</div>
+  <nav>
+    <a href="#about">关于</a>
+    <a href="#services">服务</a>
+    <a href="#why">优势</a>
+    <a href="#founder">创始人</a>
+    <a href="#contact">联系</a>
+  </nav>
+  <button class="hamburger" id="hamburger" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">关于</a>
+  <a href="#services">服务</a>
+  <a href="#why">优势</a>
+  <a href="#founder">创始人</a>
+  <a href="#contact">联系</a>
+</div>
+
 <section class="hero">
-
-<div class="hero-content">
-
-<h1>
-Build Your
-<span>Digital Identity</span>
-</h1>
-
-<p>
-用技术帮助每个人拥有属于自己的专业网站。<br>
-为学生、求职者、创作者和自由职业者打造高质量个人品牌官网。
-</p>
-
-<a href="#contact" class="btn btn-primary">开始合作</a>
-
-<a href="#services" class="btn btn-outline">查看服务</a>
-
-</div>
-
+  <span class="badge">✨ 个人品牌官网建设专家</span>
+  <h1>Build Your<br><span class="grad">Digital Identity</span></h1>
+  <p>用技术帮助每个人拥有属于自己的专业网站。<br>为学生、求职者、创作者和自由职业者打造高质量个人品牌官网。</p>
+  <div class="cta">
+    <a href="#contact" class="btn btn-primary">开始合作</a>
+    <a href="#services" class="btn btn-outline">查看服务</a>
+  </div>
 </section>
 
-<section id="about">
-
-<h2 class="section-title">
-关于 <span>HB Digital</span>
-</h2>
-
-<div class="about">
-
-HB Digital 由创始人贵浩滨创立。
-
-我们专注于个人品牌官网建设，
-帮助个人建立专业、可信且具有现代设计感的网络形象。
-
-无论你是大学生、求职者、程序员、设计师、
-摄影师、自媒体创作者还是自由职业者，
-都值得拥有属于自己的专业网站。
-
-<br><br>
-
-我们的使命：
-
-<strong>用技术帮助每个人拥有属于自己的专业网站。</strong>
-
-</div>
-
+<section id="about" class="reveal">
+  <h2 class="section-title">关于 <span class="grad">HB Digital</span></h2>
+  <div class="about">
+    HB Digital 由创始人贵浩滨创立。我们专注于个人品牌官网建设，帮助个人建立专业、可信且具有现代设计感的网络形象。
+    无论你是大学生、求职者、程序员、设计师、摄影师、自媒体创作者还是自由职业者，都值得拥有属于自己的专业网站。
+    <br><br>
+    我们的使命：<strong>用技术帮助每个人拥有属于自己的专业网站。</strong>
+  </div>
 </section>
 
-<section id="services">
-
-<h2 class="section-title">
-我们的 <span>服务</span>
-</h2>
-
-<div class="services">
-
-<div class="card">
-<h3>个人简历网站</h3>
-<p>
-展示教育背景、项目经历、技能证书和个人优势。
-</p>
-</div>
-
-<div class="card">
-<h3>个人品牌官网</h3>
-<p>
-打造专业个人形象，建立可信的网络品牌。
-</p>
-</div>
-
-<div class="card">
-<h3>作品集网站</h3>
-<p>
-展示设计作品、开发项目和个人成果。
-</p>
-</div>
-
-<div class="card">
-<h3>网站部署维护</h3>
-<p>
-域名配置、服务器部署、网站更新与维护。
-</p>
-</div>
-
-</div>
-
+<section id="services" class="reveal">
+  <h2 class="section-title">我们的 <span class="grad">服务</span></h2>
+  <div class="grid">
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg>
+      </div>
+      <h3>个人简历网站</h3>
+      <p>展示教育背景、项目经历、技能证书和个人优势。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </div>
+      <h3>个人品牌官网</h3>
+      <p>打造专业个人形象，建立可信的网络品牌。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3>作品集网站</h3>
+      <p>展示设计作品、开发项目和个人成果。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
+      </div>
+      <h3>网站部署维护</h3>
+      <p>域名配置、服务器部署、网站更新与维护。</p>
+    </div>
+  </div>
 </section>
 
-<section id="why">
-
-<h2 class="section-title">
-为什么选择 <span>HB Digital</span>
-</h2>
-
-<div class="features">
-
-<div class="feature">
-<h3>专业设计</h3>
-<p>现代化科技风视觉设计</p>
-</div>
-
-<div class="feature">
-<h3>快速交付</h3>
-<p>高效完成项目开发</p>
-</div>
-
-<div class="feature">
-<h3>响应式布局</h3>
-<p>电脑手机全面适配</p>
-</div>
-
-<div class="feature">
-<h3>长期维护</h3>
-<p>持续提供技术支持</p>
-</div>
-
-</div>
-
+<section id="why" class="reveal">
+  <h2 class="section-title">为什么选择 <span class="grad">HB Digital</span></h2>
+  <div class="grid features">
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 21l-5-2.8 1-5.5-4-3.9 5.5-.8z"/></svg></div>
+      <h3>专业设计</h3>
+      <p>现代化科技风视觉设计</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
+      <h3>快速交付</h3>
+      <p>高效完成项目开发</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+      <h3>响应式布局</h3>
+      <p>电脑手机全面适配</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3>长期维护</h3>
+      <p>持续提供技术支持</p>
+    </div>
+  </div>
 </section>
 
-<section id="founder">
-
-<h2 class="section-title">
-创始人 <span>Founder</span>
-</h2>
-
-<div class="founder">
-
-<h3>贵浩滨</h3>
-
-<p>
-
-Founder & Developer
-
-<br><br>
-
-河北工程大学
-
-信息与计算科学专业
-
-<br><br>
-
-专注于：
-
-Web Development
-
-Personal Branding
-
-Digital Solutions
-
-<br><br>
-
-希望通过技术帮助更多人建立属于自己的网络品牌形象。
-
-</p>
-
-</div>
-
+<section id="founder" class="reveal">
+  <h2 class="section-title">创始人 <span class="grad">Founder</span></h2>
+  <div class="founder">
+    <div class="avatar">贵</div>
+    <h3>贵浩滨</h3>
+    <div class="role">Founder &amp; Developer</div>
+    <p>
+      河北工程大学 · 信息与计算科学专业<br><br>
+      专注于：Web Development / Personal Branding / Digital Solutions<br><br>
+      希望通过技术帮助更多人建立属于自己的网络品牌形象。
+    </p>
+  </div>
 </section>
 
-<section id="contact">
-
-<h2 class="section-title">
-联系 <span>我们</span>
-</h2>
-
-<div class="contact-box">
-
-<p><strong>品牌：</strong>HB Digital</p>
-
-<p><strong>创始人：</strong>贵浩滨</p>
-
-<p><strong>Email：</strong>2195154945@qq.com</p>
-
-<p><strong>业务方向：</strong>Personal Website Development</p>
-
-<p><strong>Slogan：</strong>Build Your Digital Identity</p>
-
-</div>
-
+<section id="contact" class="reveal">
+  <h2 class="section-title">联系 <span class="grad">我们</span></h2>
+  <div class="contact-box">
+    <div class="row"><span class="label">品牌</span><span class="value">HB Digital</span></div>
+    <div class="row"><span class="label">创始人</span><span class="value">贵浩滨</span></div>
+    <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com <button class="copy-btn" id="copyEmail">复制</button></span></div>
+    <div class="row"><span class="label">业务方向</span><span class="value">Personal Website Development</span></div>
+    <div class="row"><span class="label">Slogan</span><span class="value">Build Your Digital Identity</span></div>
+  </div>
 </section>
 
 <footer>
-
-HB Digital © 2026
-
-<br>
-
-Build Your Digital Identity
-
+  HB Digital © 2026<br>
+  <span class="grad">Build Your Digital Identity</span>
 </footer>
+
+<button id="toTop" aria-label="回到顶部">↑</button>
+
+<script>
+// 移动端菜单
+const hamburger=document.getElementById('hamburger');
+const mobileMenu=document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>mobileMenu.classList.toggle('open'));
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobileMenu.classList.remove('open')));
+
+// 滚动入场动画
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// 回到顶部
+const toTop=document.getElementById('toTop');
+window.addEventListener('scroll',()=>{
+  toTop.classList.toggle('show',window.scrollY>400);
+});
+toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// 复制邮箱
+const copyBtn=document.getElementById('copyEmail');
+copyBtn.addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText('2195154945@qq.com');copyBtn.textContent='已复制';setTimeout(()=>copyBtn.textContent='复制',1500);}
+  catch(err){copyBtn.textContent='复制失败';}
+});
+
+// 导航栏滚动收缩
+const header=document.getElementById('header');
+window.addEventListener('scroll',()=>{
+  header.style.padding=window.scrollY>50?'12px 8%':'18px 8%';
+});
+</script>
 
 </body>
 </html>
