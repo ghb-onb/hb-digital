@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="HB Digital 用 Python 帮个人和小团队解决实际问题：办公自动化、数据处理与分析、小工具开发、测试与效率提升。">
+<meta name="description" content="HB Digital 用 Python 与 Power BI 帮个人和小团队解决实际问题：办公自动化、数据处理与分析、Power BI 报表可视化、小工具开发、测试与效率提升。">
 <meta property="og:title" content="HB Digital | 用 Python 帮你解决麻烦">
 <meta property="og:description" content="把重复、繁琐、耗时的活交给代码。Python 自动化 / 数据处理 / 效率工具。">
 <meta property="og:type" content="website">
@@ -151,7 +151,7 @@ section{padding:110px 10%;}
 .about strong{color:var(--text);}
 
 /* 卡片网格 */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;}
 .card{
   background:var(--bg-soft);padding:34px;border-radius:20px;border:1px solid var(--border);
   transition:transform .3s,border-color .3s,box-shadow .3s;
@@ -174,9 +174,9 @@ section{padding:110px 10%;}
 /* 创始人 */
 .founder{max-width:780px;margin:auto;text-align:center;background:var(--bg-soft);padding:54px 40px;border-radius:26px;border:1px solid var(--border);}
 .avatar{
-  width:96px;height:96px;border-radius:50%;margin:0 auto 22px;
-  display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;
-  background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;
+  width:120px;height:120px;border-radius:50%;margin:0 auto 22px;
+  object-fit:cover;display:block;
+  border:3px solid rgba(56,189,248,.5);
   box-shadow:0 0 30px rgba(56,189,248,.4);
 }
 .founder h3{font-size:30px;margin-bottom:6px;}
@@ -256,7 +256,7 @@ footer .grad{
 </div>
 
 <section class="hero">
-  <span class="badge">🐍 Python 问题解决专家</span>
+  <span class="badge">🐍 Python · Power BI 问题解决专家</span>
   <h1>用 Python<br><span class="grad">帮你解决麻烦</span></h1>
   <p>把重复、繁琐、耗时的活交给代码。无论是数据整理、办公自动化、小工具开发，还是测试与效率提升，我都用 Python 帮你落地解决。</p>
   <div class="cta">
@@ -269,7 +269,7 @@ footer .grad{
   <h2 class="section-title">关于 <span class="grad">HB Digital</span></h2>
   <div class="about">
     HB Digital 由贵浩滨创立，专注用 Python 帮个人和小团队解决实际问题。我们相信，很多让人头疼的重复劳动，都能用几十行代码搞定。
-    无论你是学生、职场人、运营还是创业者，只要手头有「不想手动做」的事，都可以交给我们。
+    无论你是学生、职场人、运营还是创业者，只要手头有「不想手动做」的事，都可以交给我们。从 Python 脚本到 Power BI 仪表盘，我们把数据和流程变成省心的工具。
     <br><br>
     我们的使命：<strong>用技术帮每个人把时间花在更重要的事上。</strong>
   </div>
@@ -306,6 +306,13 @@ footer .grad{
       <h3>测试与效率提升</h3>
       <p>脚本化测试、接口校验、流程自动化，减少人为出错、提升交付速度。</p>
     </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="6" width="3" height="12" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg>
+      </div>
+      <h3>Power BI 报表可视化</h3>
+      <p>把杂乱数据做成可交互仪表盘，指标一目了然，让汇报和决策更省心。</p>
+    </div>
   </div>
 </section>
 
@@ -338,12 +345,12 @@ footer .grad{
 <section id="founder" class="reveal">
   <h2 class="section-title">创始人 <span class="grad">Founder</span></h2>
   <div class="founder">
-    <div class="avatar">贵</div>
+    <img class="avatar" src="avatar.jpg" alt="贵浩滨">
     <h3>贵浩滨</h3>
     <div class="role">Founder &amp; Python Developer</div>
     <p>
       河北工程大学 · 信息与计算科学专业<br><br>
-      擅长：Python 自动化 / 数据分析 / 测试开发<br><br>
+      擅长：Python 自动化 / 数据分析 / Power BI 可视化 / 测试开发<br><br>
       希望用代码帮更多人从重复劳动里解放出来。
     </p>
   </div>
@@ -355,7 +362,7 @@ footer .grad{
     <div class="row"><span class="label">品牌</span><span class="value">HB Digital</span></div>
     <div class="row"><span class="label">创始人</span><span class="value">贵浩滨</span></div>
     <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com <button class="copy-btn" id="copyEmail">复制</button></span></div>
-    <div class="row"><span class="label">业务方向</span><span class="value">Python 技术解决方案 · 自动化 / 数据处理 / 效率工具</span></div>
+    <div class="row"><span class="label">业务方向</span><span class="value">Python &amp; Power BI 技术解决方案 · 自动化 / 数据处理 / 可视化 / 效率工具</span></div>
     <div class="row"><span class="label">Slogan</span><span class="value">用 Python 把麻烦交给我们</span></div>
   </div>
 </section>
