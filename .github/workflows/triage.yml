@@ -1,0 +1,69 @@
+name: 技术反馈自动分诊
+
+# 计算层：新反馈进来后，自动补标签、按关键词分类、留受理回执。
+# 这是"GitHub 当后端"的服务端逻辑：没有服务器，用 Actions 跑。
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 自动分诊
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issue = context.payload.issue;
+
+            // 1. 只处理带「反馈」标签的，其他 issue 不插手
+            const labels = (issue.labels || []).map(l => l.name);
+            if (!labels.includes('反馈')) {
+              core.info('非技术反馈类 issue，跳过');
+              return;
+            }
+
+            // 2. 确保管理用标签存在（幂等创建，已存在返回 422 忽略）
+            const palette = {
+              '反馈': '0e7490',
+              '待处理': 'd29922',
+              '已处理': '2ea043',
+              '已报价': '8250df',
+              '加急': 'cf222e',
+            };
+            for (const [name, color] of Object.entries(palette)) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name });
+              } catch (e) {
+                if (e.status === 404) {
+                  await github.rest.issues.createLabel({ owner, repo, name, color });
+                }
+              }
+            }
+
+            // 3. 按正文关键词自动加标签，方便后台筛
+            const body = (issue.body || '').toLowerCase();
+            const extra = [];
+            if (/加急|尽快|着急|紧急|今天|明天/.test(body)) extra.push('加急');
+            if (extra.length) {
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: issue.number, labels: extra,
+              });
+            }
+
+            // 4. 留一条受理回执，让提交者知道没被忽略
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: issue.number,
+              body: [
+                '收到，已记录 ✅',
+                '',
+                '我会尽快查看这条反馈并处理。',
+                '补充信息可以直接在这里继续回复。',
+              ].join('\n'),
+            });
+
+            core.info(`已受理 #${issue.number}`);
