@@ -172,6 +172,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
       <button class="tab" data-filter="done">已处理</button>
     </div>
     <button class="btn" id="refresh">刷新</button>
+    <button class="btn" id="publishStats">更新看板</button>
   </div>
 
   <div class="list" id="list">
@@ -191,11 +192,12 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 
 <div class="modal" id="modal">
   <h3>连接你的 GitHub 账号</h3>
-  <p>本站没有后端服务器，所有数据都存在本仓库的 Issues 里。管理操作需要一个只对 <b>这个仓库</b> 有 Issues 权限的令牌。</p>
+  <p>本站没有后端服务器，所有数据都存在本仓库的 Issues 里。管理操作需要一个只对 <b>这个仓库</b> 有权限的令牌。</p>
   <ol>
     <li>打开 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">创建 Fine-grained token</a></li>
     <li>Repository access 只选 <b>hb-digital</b></li>
-    <li>Permissions → Issues 设为 <b>Read and write</b></li>
+    <li>Permissions → <b>Issues: Read and write</b>（必需）</li>
+    <li>Permissions → <b>Contents: Read and write</b>（可选，用于「更新看板」写回 stats.json）</li>
     <li>生成后粘贴到下面</li>
   </ol>
   <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
@@ -492,12 +494,66 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
   };
   $('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('saveLogin').click(); });
 
+  // ---------- 发布看板数据 ----------
+  function b64utf8(str){
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  async function publishStats(){
+    if (!token) { toast('需要登录后才能写入', 'err'); return; }
+    const btn = $('publishStats');
+    btn.disabled = true;
+    const now = Date.now();
+    const age = i => now - new Date(i.created_at).getTime();
+    const stats = {
+      total: issues.length,
+      open: issues.filter(i => !isDone(i)).length,
+      closed: issues.filter(isDone).length,
+      thisWeek: issues.filter(i => age(i) < WEEK).length,
+      thisMonth: issues.filter(i => age(i) < 30 * 864e5).length,
+      avgResponseHours: null,
+      byCategory: {},
+      recent: issues.slice(0, 5).map(i => ({
+        number: i.number,
+        title: (i.title || '').replace(/^\[咨询\]\s*/, ''),
+        state: i.state,
+        createdAt: i.created_at,
+      })),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const path = '/repos/' + CFG.owner + '/' + CFG.repo + '/contents/stats.json';
+    try {
+      let sha = null;
+      try { const cur = await api(path); sha = cur && cur.sha; } catch (e) { /* 文件不存在则新建 */ }
+      const body = {
+        message: 'chore(stats): 由管理台更新咨询统计',
+        content: b64utf8(JSON.stringify(stats, null, 2) + '\n'),
+        branch: 'main',
+      };
+      if (sha) body.sha = sha;
+      await api(path, { method: 'PUT', body });
+      toast('看板数据已写回仓库，刷新首页即可看到', 'ok');
+    } catch (e) {
+      const hint = (e.status === 403 || e.status === 404)
+        ? '令牌缺少 Contents 写入权限，请在令牌设置里补上后重试'
+        : e.message;
+      toast(hint, 'err');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
   // ---------- 事件绑定 ----------
   $('list').addEventListener('click', e => {
     const item = e.target.closest('.item');
     if (item) openIssue(Number(item.dataset.num));
   });
   $('refresh').onclick = load;
+  $('publishStats').onclick = publishStats;
   $('dClose').onclick = closeDrawer;
   $('mask').onclick = () => { closeDrawer(); closeModal(); };
   document.addEventListener('keydown', e => {
