@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>咨询管理台 | HB Digital</title>
+<style>
+:root{
+  --bg:#05070d;--panel:rgba(14,20,34,.82);--panel-2:rgba(20,28,46,.9);
+  --border:rgba(120,160,220,.18);--text:#e8eefc;--muted:#93a2bd;--faint:#5f7191;
+  --accent:#38bdf8;--accent-2:#2563eb;--ok:#2ea043;--warn:#d29922;--danger:#cf222e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:
+    radial-gradient(900px 600px at 12% -8%,rgba(37,99,235,.22),transparent 65%),
+    radial-gradient(700px 500px at 92% 6%,rgba(56,189,248,.14),transparent 62%),
+    linear-gradient(rgba(120,160,220,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,160,220,.045) 1px,transparent 1px);
+  background-size:auto,auto,46px 46px,46px 46px;
+}
+button{font-family:inherit;cursor:pointer;}
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+  padding:14px 24px;border-bottom:1px solid var(--border);
+  background:rgba(6,10,18,.82);backdrop-filter:blur(16px);
+}
+.topbar .logo{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.4px;font-size:16px;}
+.topbar .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);}
+.topbar .sub{font-size:12px;color:var(--faint);}
+.spacer{flex:1;}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;
+  font-size:12px;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,.03);
+}
+.pill b{color:var(--text);font-weight:600;}
+.pill.ro{color:var(--warn);border-color:rgba(210,153,34,.4);background:rgba(210,153,34,.08);}
+.pill.on{color:var(--ok);border-color:rgba(46,160,67,.4);background:rgba(46,160,67,.08);}
+.btn{
+  padding:8px 15px;border-radius:9px;border:1px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:13px;transition:.18s;
+}
+.btn:hover{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.45);}
+.btn.primary{background:linear-gradient(135deg,var(--accent-2),var(--accent));border:0;font-weight:600;}
+.btn.primary:hover{filter:brightness(1.1);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 24px 80px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+.stat{
+  padding:16px 18px;border-radius:14px;border:1px solid var(--border);
+  background:var(--panel);backdrop-filter:blur(12px);
+}
+.stat .k{font-size:12px;color:var(--faint);margin-bottom:8px;letter-spacing:.3px;}
+.stat .v{font-size:28px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+.stat .v.accent{color:var(--accent);}
+.stat .v.warn{color:var(--warn);}
+.stat .v.ok{color:var(--ok);}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.search{
+  flex:1;min-width:200px;padding:9px 13px;border-radius:9px;font-size:13px;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--text);outline:none;
+}
+.search:focus{border-color:rgba(56,189,248,.5);}
+.search::placeholder{color:var(--faint);}
+.tabs{display:flex;gap:4px;padding:3px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);}
+.tab{padding:6px 13px;border-radius:7px;border:0;background:transparent;color:var(--muted);font-size:13px;transition:.18s;}
+.tab.on{background:rgba(56,189,248,.16);color:var(--accent);font-weight:600;}
+.list{display:flex;flex-direction:column;gap:10px;}
+.item{
+  display:flex;gap:14px;padding:15px 17px;border-radius:13px;border:1px solid var(--border);
+  background:var(--panel);cursor:pointer;transition:.18s;align-items:flex-start;
+}
+.item:hover{border-color:rgba(56,189,248,.42);transform:translateY(-1px);background:var(--panel-2);}
+.item .num{font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums;padding-top:2px;min-width:34px;}
+.item .main{flex:1;min-width:0;}
+.item .t{font-size:15px;font-weight:600;margin-bottom:6px;word-break:break-word;}
+.item .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--faint);}
+.item .snip{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word;}
+.tag{padding:2px 8px;border-radius:6px;font-size:11px;border:1px solid transparent;}
+.tag.pending{color:var(--warn);background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.3);}
+.tag.done{color:var(--ok);background:rgba(46,160,67,.12);border-color:rgba(46,160,67,.3);}
+.tag.urgent{color:var(--danger);background:rgba(207,34,46,.12);border-color:rgba(207,34,46,.35);}
+.avatar{width:24px;height:24px;border-radius:50%;border:1px solid var(--border);}
+.empty{text-align:center;padding:70px 20px;color:var(--faint);font-size:14px;line-height:2;}
+.mask{position:fixed;inset:0;background:rgba(3,6,12,.72);backdrop-filter:blur(3px);z-index:90;opacity:0;visibility:hidden;transition:.25s;}
+.mask.show{opacity:1;visibility:visible;}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(620px,100%);z-index:100;
+  background:#080d17;border-left:1px solid var(--border);
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.drawer.show{transform:none;}
+.drawer .head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;}
+.drawer .head h3{font-size:16px;line-height:1.45;flex:1;word-break:break-word;}
+.drawer .body{padding:20px 22px;overflow-y:auto;flex:1;font-size:13.5px;line-height:1.75;color:var(--muted);}
+.drawer .body h4{color:var(--text);font-size:13px;margin:16px 0 6px;letter-spacing:.3px;}
+.drawer .body h4:first-child{margin-top:0;}
+.drawer .body strong{color:var(--text);}
+.drawer .body code{background:rgba(56,189,248,.12);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--accent);}
+.drawer .foot{padding:16px 22px;border-top:1px solid var(--border);display:flex;gap:9px;flex-wrap:wrap;}
+.close{background:transparent;border:0;color:var(--faint);font-size:24px;line-height:1;padding:0 4px;}
+.close:hover{color:var(--text);}
+.modal{
+  position:fixed;z-index:120;top:50%;left:50%;transform:translate(-50%,-48%) scale(.97);
+  width:min(520px,calc(100% - 32px));padding:26px;border-radius:16px;
+  background:#0a1220;border:1px solid var(--border);opacity:0;visibility:hidden;transition:.22s;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+}
+.modal.show{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1);}
+.modal h3{font-size:17px;margin-bottom:14px;}
+.modal p{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:12px;}
+.modal ol{font-size:13px;color:var(--muted);line-height:1.9;margin:0 0 14px 18px;}
+.modal a{color:var(--accent);}
+.modal input{
+  width:100%;padding:10px 13px;border-radius:9px;border:1px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:13px;outline:none;margin-bottom:10px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.modal input:focus{border-color:rgba(56,189,248,.5);}
+.modal .row{display:flex;gap:9px;justify-content:flex-end;margin-top:6px;}
+textarea{
+  width:100%;min-height:86px;padding:10px 12px;border-radius:9px;font-size:13px;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);
+  outline:none;resize:vertical;font-family:inherit;line-height:1.6;
+}
+textarea:focus{border-color:rgba(56,189,248,.5);}
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);z-index:200;
+  padding:11px 20px;border-radius:10px;font-size:13px;
+  background:#111a2c;border:1px solid var(--border);box-shadow:0 14px 40px rgba(0,0,0,.6);
+  opacity:0;visibility:hidden;transition:.25s;
+}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0);}
+.toast.err{border-color:rgba(207,34,46,.5);color:#ff9b9b;}
+.toast.ok{border-color:rgba(46,160,67,.5);color:#8ee6a0;}
+@media(max-width:760px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .wrap{padding:18px 14px 60px;}
+  .topbar{padding:12px 14px;}
+  .topbar .sub{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo"><span class="dot"></span>HB Digital</div>
+  <span class="sub">咨询管理台</span>
+  <div class="spacer"></div>
+  <span class="pill" id="authState">检测中…</span>
+  <button class="btn" id="loginBtn">登录</button>
+</div>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><div class="k">全部咨询</div><div class="v" id="sTotal">—</div></div>
+    <div class="stat"><div class="k">待处理</div><div class="v warn" id="sPending">—</div></div>
+    <div class="stat"><div class="k">本周新增</div><div class="v accent" id="sWeek">—</div></div>
+    <div class="stat"><div class="k">已处理</div><div class="v ok" id="sDone">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search" id="search" placeholder="搜索标题、正文、提交人…">
+    <div class="tabs">
+      <button class="tab on" data-filter="all">全部</button>
+      <button class="tab" data-filter="pending">待处理</button>
+      <button class="tab" data-filter="done">已处理</button>
+    </div>
+    <button class="btn" id="refresh">刷新</button>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty">正在加载咨询数据…</div>
+  </div>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <div class="head">
+    <h3 id="dTitle">—</h3>
+    <button class="close" id="dClose">×</button>
+  </div>
+  <div class="body" id="dBody"></div>
+  <div class="foot" id="dFoot"></div>
+</div>
+
+<div class="modal" id="modal">
+  <h3>连接你的 GitHub 账号</h3>
+  <p>本站没有后端服务器，所有数据都存在本仓库的 Issues 里。管理操作需要一个只对 <b>这个仓库</b> 有 Issues 权限的令牌。</p>
+  <ol>
+    <li>打开 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">创建 Fine-grained token</a></li>
+    <li>Repository access 只选 <b>hb-digital</b></li>
+    <li>Permissions → Issues 设为 <b>Read and write</b></li>
+    <li>生成后粘贴到下面</li>
+  </ol>
+  <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
+  <p style="font-size:12px;color:var(--faint);margin-bottom:0">
+    令牌只保存在你这台设备的浏览器里，不会发送到任何第三方服务器。
+  </p>
+  <div class="row">
+    <button class="btn" id="cancelLogin">取消</button>
+    <button class="btn primary" id="saveLogin">连接</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  const CFG = { owner:'ghb-onb', repo:'hb-digital', label:'咨询', me:'ghb-onb' };
+  const TOKEN_KEY = 'hb_gh_pat_v1';
+  const WEEK = 7 * 864e5;
+
+  let token = localStorage.getItem(TOKEN_KEY) || '';
+  let issues = [];
+  let filter = 'all';
+  let keyword = '';
+  let current = null;
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+  ));
+
+  // ---------- 提示 ----------
+  let toastTimer = null;
+  function toast(msg, kind){
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (kind ? ' ' + kind : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = 'toast'; }, 3200);
+  }
+
+  // ---------- GitHub API ----------
+  async function api(path, opts){
+    opts = opts || {};
+    const headers = { 'Accept':'application/vnd.github+json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    if (opts.body) headers['Content-Type'] = 'application/json';
+    const res = await fetch('https://api.github.com' + path, {
+      method: opts.method || 'GET',
+      headers,
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    if (res.status === 204) return null;
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      let msg = (data && data.message) || ('HTTP ' + res.status);
+      if (res.status === 401) msg = '凭证无效或已过期，请重新登录';
+      else if (res.status === 403) msg = '权限不足或触发限流，请稍后再试';
+      else if (res.status === 404) msg = '找不到资源（仓库或 Issue 不存在）';
+      const err = new Error(msg);
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  }
+
+  async function verifyToken(t){
+    const res = await fetch('https://api.github.com/user', {
+      headers: { 'Accept':'application/vnd.github+json', 'Authorization':'Bearer ' + t },
+    });
+    if (!res.ok) throw new Error('令牌无效');
+    const u = await res.json();
+    if ((u.login || '').toLowerCase() !== CFG.me.toLowerCase()) {
+      throw new Error('这个令牌属于 ' + u.login + '，不是本站管理员');
+    }
+    return u;
+  }
+
+  // ---------- 数据 ----------
+  async function load(){
+    $('list').innerHTML = '<div class="empty">正在加载咨询数据…</div>';
+    try {
+      const data = await api(
+        '/repos/' + CFG.owner + '/' + CFG.repo + '/issues' +
+        '?labels=' + encodeURIComponent(CFG.label) +
+        '&state=all&per_page=100&sort=created&direction=desc'
+      );
+      issues = (data || []).filter(i => !i.pull_request);
+      render();
+    } catch (e) {
+      $('list').innerHTML = '<div class="empty">加载失败：' + esc(e.message) +
+        '<br><span style="font-size:12px">点右上角「登录」后重试</span></div>';
+      toast(e.message, 'err');
+    }
+  }
+
+  const hasLabel = (i, n) => (i.labels || []).some(l => l.name === n);
+  const isDone = i => i.state === 'closed' || hasLabel(i, '已处理');
+
+  function relTime(iso){
+    const d = Date.now() - new Date(iso).getTime();
+    if (d < 6e4) return '刚刚';
+    if (d < 36e5) return Math.floor(d / 6e4) + ' 分钟前';
+    if (d < 864e5) return Math.floor(d / 36e5) + ' 小时前';
+    if (d < 30 * 864e5) return Math.floor(d / 864e5) + ' 天前';
+    return new Date(iso).toLocaleDateString('zh-CN');
+  }
+
+  function snippet(body){
+    return String(body || '')
+      .replace(/^###\s*/gm, '')
+      .replace(/^[-*]\s*\[[ xX]\]\s*/gm, '')
+      .replace(/\r/g, '')
+      .replace(/\n+/g, ' ')
+      .trim()
+      .slice(0, 160);
+  }
+
+  function render(){
+    const now = Date.now();
+    const list = issues.filter(i => {
+      if (filter === 'pending' && isDone(i)) return false;
+      if (filter === 'done' && !isDone(i)) return false;
+      if (keyword) {
+        const hay = ((i.title || '') + ' ' + (i.body || '') + ' ' + (i.user && i.user.login || '')).toLowerCase();
+        if (hay.indexOf(keyword) < 0) return false;
+      }
+      return true;
+    });
+
+    $('sTotal').textContent = issues.length;
+    $('sPending').textContent = issues.filter(i => !isDone(i)).length;
+    $('sDone').textContent = issues.filter(isDone).length;
+    $('sWeek').textContent = issues.filter(i => now - new Date(i.created_at).getTime() < WEEK).length;
+
+    if (!list.length) {
+      $('list').innerHTML = '<div class="empty">' +
+        (issues.length ? '没有符合筛选条件的咨询' : '还没有咨询。把站点分享出去，第一条留言就会出现在这里。') +
+        '</div>';
+      return;
+    }
+
+    $('list').innerHTML = list.map(i => {
+      const done = isDone(i);
+      const urgent = hasLabel(i, '加急');
+      return '<div class="item" data-num="' + i.number + '">' +
+        '<div class="num">#' + i.number + '</div>' +
+        '<div class="main">' +
+          '<div class="t">' + esc((i.title || '').replace(/^\[咨询\]\s*/, '')) + '</div>' +
+          '<div class="meta">' +
+            '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="" loading="lazy">' +
+            '<span>' + esc(i.user && i.user.login || '未知') + '</span>' +
+            '<span>' + relTime(i.created_at) + '</span>' +
+            '<span class="tag ' + (done ? 'done' : 'pending') + '">' + (done ? '已处理' : '待处理') + '</span>' +
+            (urgent ? '<span class="tag urgent">加急</span>' : '') +
+            (i.comments ? '<span>' + i.comments + ' 条回复</span>' : '') +
+          '</div>' +
+          '<div class="snip">' + esc(snippet(i.body)) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ---------- 详情抽屉 ----------
+  function md(src){
+    return esc(src)
+      .replace(/^###\s*(.+)$/gm, '<h4>$1</h4>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^- \[[xX]\]\s*(.+)$/gm, '☑ $1')
+      .replace(/^- \[ \]\s*(.+)$/gm, '☐ $1')
+      .replace(/\n/g, '<br>');
+  }
+
+  function openIssue(num){
+    const i = issues.find(x => x.number === num);
+    if (!i) return;
+    current = i;
+    $('dTitle').innerHTML = '<span style="color:var(--faint);font-size:13px">#' + i.number + '</span> ' +
+      esc((i.title || '').replace(/^\[咨询\]\s*/, ''));
+    $('dBody').innerHTML =
+      '<div style="display:flex;gap:9px;align-items:center;margin-bottom:16px;font-size:12px;color:var(--faint)">' +
+        '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="">' +
+        '<span>' + esc(i.user && i.user.login || '') + '</span>' +
+        '<span>·</span><span>' + new Date(i.created_at).toLocaleString('zh-CN') + '</span>' +
+      '</div>' +
+      md(i.body || '（无正文）');
+
+    const done = isDone(i);
+    const editable = !!token;
+    $('dFoot').innerHTML =
+      '<button class="btn ' + (done ? '' : 'primary') + '" id="toggleBtn" ' + (editable ? '' : 'disabled') + '>' +
+        (done ? '重新打开' : '标记已处理') + '</button>' +
+      '<button class="btn" id="replyBtn" ' + (editable ? '' : 'disabled') + '>回复并关闭</button>' +
+      '<a class="btn" href="https://github.com/' + CFG.owner + '/' + CFG.repo + '/issues/' + i.number +
+        '" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">在 GitHub 打开</a>';
+
+    $('drawer').classList.add('show');
+    $('mask').classList.add('show');
+
+    const t = $('toggleBtn');
+    if (t) t.onclick = () => toggleState(i);
+    const r = $('replyBtn');
+    if (r) r.onclick = () => replyAndClose(i);
+  }
+
+  function closeDrawer(){
+    $('drawer').classList.remove('show');
+    $('mask').classList.remove('show');
+    current = null;
+  }
+
+  // ---------- 操作 ----------
+  async function toggleState(i){
+    const done = isDone(i);
+    const base = '/repos/' + CFG.owner + '/' + CFG.repo + '/issues/' + i.number;
+    try {
+      if (done) {
+        await api(base, { method:'PATCH', body:{ state:'open' } });
+        await api(base + '/labels', { method:'POST', body:{ labels:['待处理'] } }).catch(()=>{});
+        await api(base + '/labels/' + encodeURIComponent('已处理'), { method:'DELETE' }).catch(()=>{});
+        toast('已重新标记为待处理', 'ok');
+      } else {
+        await api(base, { method:'PATCH', body:{ state:'closed', state_reason:'completed' } });
+        await api(base + '/labels', { method:'POST', body:{ labels:['已处理'] } }).catch(()=>{});
+        toast('已标记为处理完成', 'ok');
+      }
+      await load();
+      closeDrawer();
+    } catch (e) { toast(e.message, 'err'); }
+  }
+
+  async function replyAndClose(i){
+    const text = prompt('回复内容（会作为公开评论发送给对方）：', '收到，我正在评估这个需求，稍后给你具体方案和报价。');
+    if (!text) return;
+    const base = '/repos/' + CFG.owner + '/' + CFG.repo + '/issues/' + i.number;
+    try {
+      await api(base + '/comments', { method:'POST', body:{ body:text } });
+      await api(base, { method:'PATCH', body:{ state:'closed', state_reason:'completed' } });
+      await api(base + '/labels', { method:'POST', body:{ labels:['已处理'] } }).catch(()=>{});
+      toast('已回复并关闭', 'ok');
+      await load();
+      closeDrawer();
+    } catch (e) { toast(e.message, 'err'); }
+  }
+
+  // ---------- 鉴权 ----------
+  function setAuthUI(ok){
+    const el = $('authState');
+    if (ok) {
+      el.className = 'pill on';
+      el.innerHTML = '<b>' + esc(CFG.me) + '</b> · 已连接';
+      $('loginBtn').textContent = '退出';
+    } else {
+      el.className = 'pill ro';
+      el.textContent = '只读模式';
+      $('loginBtn').textContent = '登录';
+    }
+  }
+
+  function openModal(){ $('modal').classList.add('show'); $('tokenInput').focus(); }
+  function closeModal(){ $('modal').classList.remove('show'); $('tokenInput').value = ''; }
+
+  $('loginBtn').onclick = async () => {
+    if (token) {
+      if (!confirm('退出后需要重新粘贴令牌，确定退出？')) return;
+      localStorage.removeItem(TOKEN_KEY);
+      token = '';
+      setAuthUI(false);
+      await load();
+      toast('已退出登录');
+    } else {
+      openModal();
+    }
+  };
+
+  $('cancelLogin').onclick = closeModal;
+  $('saveLogin').onclick = async () => {
+    const t = $('tokenInput').value.trim();
+    if (!t) { toast('请先粘贴令牌', 'err'); return; }
+    try {
+      await verifyToken(t);
+      token = t;
+      localStorage.setItem(TOKEN_KEY, t);
+      setAuthUI(true);
+      closeModal();
+      toast('已连接，可以管理咨询了', 'ok');
+      await load();
+    } catch (e) {
+      toast(e.message, 'err');
+    }
+  };
+  $('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('saveLogin').click(); });
+
+  // ---------- 事件绑定 ----------
+  $('list').addEventListener('click', e => {
+    const item = e.target.closest('.item');
+    if (item) openIssue(Number(item.dataset.num));
+  });
+  $('refresh').onclick = load;
+  $('dClose').onclick = closeDrawer;
+  $('mask').onclick = () => { closeDrawer(); closeModal(); };
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeDrawer(); closeModal(); }
+  });
+  $('search').addEventListener('input', e => {
+    keyword = e.target.value.trim().toLowerCase();
+    render();
+  });
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      filter = btn.dataset.filter;
+      render();
+    };
+  });
+
+  // ---------- 启动 ----------
+  (async function init(){
+    if (token) {
+      try { await verifyToken(token); setAuthUI(true); }
+      catch (e) {
+        localStorage.removeItem(TOKEN_KEY);
+        token = '';
+        setAuthUI(false);
+        toast('保存的令牌已失效，请重新登录', 'err');
+      }
+    } else {
+      setAuthUI(false);
+    }
+    await load();
+  })();
+})();
+</script>
+</body>
+</html>
