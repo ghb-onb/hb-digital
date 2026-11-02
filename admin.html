@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>咨询管理台 | HB Digital</title>
+<title>反馈管理台 | HB Digital</title>
 <style>
 :root{
   --bg:#05070d;--panel:rgba(14,20,34,.82);--panel-2:rgba(20,28,46,.9);
@@ -150,7 +150,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 
 <div class="topbar">
   <div class="logo"><span class="dot"></span>HB Digital</div>
-  <span class="sub">咨询管理台</span>
+  <span class="sub">技术反馈管理台</span>
   <div class="spacer"></div>
   <span class="pill" id="authState">检测中…</span>
   <button class="btn" id="loginBtn">登录</button>
@@ -158,7 +158,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 
 <div class="wrap">
   <div class="stats">
-    <div class="stat"><div class="k">全部咨询</div><div class="v" id="sTotal">—</div></div>
+    <div class="stat"><div class="k">全部反馈</div><div class="v" id="sTotal">—</div></div>
     <div class="stat"><div class="k">待处理</div><div class="v warn" id="sPending">—</div></div>
     <div class="stat"><div class="k">本周新增</div><div class="v accent" id="sWeek">—</div></div>
     <div class="stat"><div class="k">已处理</div><div class="v ok" id="sDone">—</div></div>
@@ -172,11 +172,10 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
       <button class="tab" data-filter="done">已处理</button>
     </div>
     <button class="btn" id="refresh">刷新</button>
-    <button class="btn" id="publishStats">更新看板</button>
   </div>
 
   <div class="list" id="list">
-    <div class="empty">正在加载咨询数据…</div>
+    <div class="empty">正在加载反馈数据…</div>
   </div>
 </div>
 
@@ -196,13 +195,13 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
   <ol>
     <li>打开 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">创建 Fine-grained token</a></li>
     <li>Repository access 只选 <b>hb-digital</b></li>
-    <li>Permissions → <b>Issues: Read and write</b>（必需）</li>
-    <li>Permissions → <b>Contents: Read and write</b>（可选，用于「更新看板」写回 stats.json）</li>
+    <li>Permissions → <b>Issues: Read and write</b>（只需要这一个）</li>
+    <li>有效期建议设在 <b>7–30 天</b>，到期重新生成即可</li>
     <li>生成后粘贴到下面</li>
   </ol>
   <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
   <p style="font-size:12px;color:var(--faint);margin-bottom:0">
-    令牌只保存在你这台设备的浏览器里，不会发送到任何第三方服务器。
+    令牌只保存在本标签页的 sessionStorage 里，关闭标签页即失效，不会写入磁盘，也不会发送到任何第三方服务器。
   </p>
   <div class="row">
     <button class="btn" id="cancelLogin">取消</button>
@@ -216,11 +215,11 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 (function(){
   'use strict';
 
-  const CFG = { owner:'ghb-onb', repo:'hb-digital', label:'咨询', me:'ghb-onb' };
+  const CFG = { owner:'ghb-onb', repo:'hb-digital', label:'反馈', me:'ghb-onb' };
   const TOKEN_KEY = 'hb_gh_pat_v1';
   const WEEK = 7 * 864e5;
 
-  let token = localStorage.getItem(TOKEN_KEY) || '';
+  let token = sessionStorage.getItem(TOKEN_KEY) || '';
   let issues = [];
   let filter = 'all';
   let keyword = '';
@@ -280,7 +279,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 
   // ---------- 数据 ----------
   async function load(){
-    $('list').innerHTML = '<div class="empty">正在加载咨询数据…</div>';
+    $('list').innerHTML = '<div class="empty">正在加载反馈数据…</div>';
     try {
       const data = await api(
         '/repos/' + CFG.owner + '/' + CFG.repo + '/issues' +
@@ -337,7 +336,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
 
     if (!list.length) {
       $('list').innerHTML = '<div class="empty">' +
-        (issues.length ? '没有符合筛选条件的咨询' : '还没有咨询。把站点分享出去，第一条留言就会出现在这里。') +
+        (issues.length ? '没有符合筛选条件的反馈' : '还没有反馈。等第一条技术反馈进来，这里就会有内容。') +
         '</div>';
       return;
     }
@@ -348,7 +347,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
       return '<div class="item" data-num="' + i.number + '">' +
         '<div class="num">#' + i.number + '</div>' +
         '<div class="main">' +
-          '<div class="t">' + esc((i.title || '').replace(/^\[咨询\]\s*/, '')) + '</div>' +
+          '<div class="t">' + esc((i.title || '').replace(/^\[(?:咨询|反馈)\]\s*/, '')) + '</div>' +
           '<div class="meta">' +
             '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="" loading="lazy">' +
             '<span>' + esc(i.user && i.user.login || '未知') + '</span>' +
@@ -379,7 +378,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
     if (!i) return;
     current = i;
     $('dTitle').innerHTML = '<span style="color:var(--faint);font-size:13px">#' + i.number + '</span> ' +
-      esc((i.title || '').replace(/^\[咨询\]\s*/, ''));
+      esc((i.title || '').replace(/^\[(?:咨询|反馈)\]\s*/, ''));
     $('dBody').innerHTML =
       '<div style="display:flex;gap:9px;align-items:center;margin-bottom:16px;font-size:12px;color:var(--faint)">' +
         '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="">' +
@@ -466,7 +465,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
   $('loginBtn').onclick = async () => {
     if (token) {
       if (!confirm('退出后需要重新粘贴令牌，确定退出？')) return;
-      localStorage.removeItem(TOKEN_KEY);
+      sessionStorage.removeItem(TOKEN_KEY);
       token = '';
       setAuthUI(false);
       await load();
@@ -483,10 +482,10 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
     try {
       await verifyToken(t);
       token = t;
-      localStorage.setItem(TOKEN_KEY, t);
+      sessionStorage.setItem(TOKEN_KEY, t);
       setAuthUI(true);
       closeModal();
-      toast('已连接，可以管理咨询了', 'ok');
+      toast('已连接，可以管理反馈了', 'ok');
       await load();
     } catch (e) {
       toast(e.message, 'err');
@@ -494,66 +493,12 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
   };
   $('tokenInput').addEventListener('keydown', e => { if (e.key === 'Enter') $('saveLogin').click(); });
 
-  // ---------- 发布看板数据 ----------
-  function b64utf8(str){
-    const bytes = new TextEncoder().encode(str);
-    let bin = '';
-    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-    return btoa(bin);
-  }
-
-  async function publishStats(){
-    if (!token) { toast('需要登录后才能写入', 'err'); return; }
-    const btn = $('publishStats');
-    btn.disabled = true;
-    const now = Date.now();
-    const age = i => now - new Date(i.created_at).getTime();
-    const stats = {
-      total: issues.length,
-      open: issues.filter(i => !isDone(i)).length,
-      closed: issues.filter(isDone).length,
-      thisWeek: issues.filter(i => age(i) < WEEK).length,
-      thisMonth: issues.filter(i => age(i) < 30 * 864e5).length,
-      avgResponseHours: null,
-      byCategory: {},
-      recent: issues.slice(0, 5).map(i => ({
-        number: i.number,
-        title: (i.title || '').replace(/^\[咨询\]\s*/, ''),
-        state: i.state,
-        createdAt: i.created_at,
-      })),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const path = '/repos/' + CFG.owner + '/' + CFG.repo + '/contents/stats.json';
-    try {
-      let sha = null;
-      try { const cur = await api(path); sha = cur && cur.sha; } catch (e) { /* 文件不存在则新建 */ }
-      const body = {
-        message: 'chore(stats): 由管理台更新咨询统计',
-        content: b64utf8(JSON.stringify(stats, null, 2) + '\n'),
-        branch: 'main',
-      };
-      if (sha) body.sha = sha;
-      await api(path, { method: 'PUT', body });
-      toast('看板数据已写回仓库，刷新首页即可看到', 'ok');
-    } catch (e) {
-      const hint = (e.status === 403 || e.status === 404)
-        ? '令牌缺少 Contents 写入权限，请在令牌设置里补上后重试'
-        : e.message;
-      toast(hint, 'err');
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
   // ---------- 事件绑定 ----------
   $('list').addEventListener('click', e => {
     const item = e.target.closest('.item');
     if (item) openIssue(Number(item.dataset.num));
   });
   $('refresh').onclick = load;
-  $('publishStats').onclick = publishStats;
   $('dClose').onclick = closeDrawer;
   $('mask').onclick = () => { closeDrawer(); closeModal(); };
   document.addEventListener('keydown', e => {
@@ -577,7 +522,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
     if (token) {
       try { await verifyToken(token); setAuthUI(true); }
       catch (e) {
-        localStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(TOKEN_KEY);
         token = '';
         setAuthUI(false);
         toast('保存的令牌已失效，请重新登录', 'err');
