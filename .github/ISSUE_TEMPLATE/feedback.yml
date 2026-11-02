@@ -1,0 +1,61 @@
+name: 技术反馈
+description: 报告本站的显示异常、功能建议或内容错误（公开可见，请勿填写隐私信息）
+title: "[反馈] "
+labels: ["反馈", "待处理"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 这是公开的技术反馈通道
+
+        用于报告**本站本身**的问题：页面报错、样式错乱、加载失败、内容有误、功能建议。
+
+        > ⚠️ 这个表单**公开可见**，请不要填写手机号、微信、公司资料等任何隐私信息。
+        > **如果你是要谈具体业务需求，请改用邮件**——内容私密，也方便发附件。
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 反馈类型
+      options:
+        - 页面显示异常 / 样式错乱
+        - 功能无法使用 / 报错
+        - 内容有误或已过期
+        - 功能建议
+        - 其他
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: 具体描述
+      description: 你看到了什么、期望看到什么
+      placeholder: |
+        例如：在 iPhone Safari 上打开首页，「架构」板块的卡片重叠在一起，文字看不清。
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤（可选）
+      description: 怎样能再次触发这个现象
+      placeholder: |
+        1. 用手机浏览器打开首页
+        2. 向下滚动到「这个网站怎么跑起来的」
+        3. 看到四张卡片挤在一起
+
+  - type: input
+    id: env
+    attributes:
+      label: 浏览器 / 设备（可选）
+      placeholder: 例如：Chrome 130 / Windows 11；或 iPhone 15 / Safari
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我确认此反馈会公开显示在 Issues 中，且没有包含隐私信息
+          required: true
