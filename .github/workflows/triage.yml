@@ -20,19 +20,19 @@ jobs:
             const { owner, repo } = context.repo;
             const issue = context.payload.issue;
 
-            // 1. 只处理带「反馈」标签的，其他 issue 不插手
+            // 1. 只处理技术反馈表单创建的 Issue；标题前缀可避免依赖预先存在的标签
             const labels = (issue.labels || []).map(l => l.name);
-            if (!labels.includes('反馈')) {
+            const isFeedback = labels.includes('反馈') || /^\\[反馈\\]/i.test(issue.title || '');
+            if (!isFeedback) {
               core.info('非技术反馈类 issue，跳过');
               return;
             }
 
-            // 2. 确保管理用标签存在（幂等创建，已存在返回 422 忽略）
+            // 2. 确保管理用标签存在（幂等创建，已存在则跳过）
             const palette = {
               '反馈': '0e7490',
               '待处理': 'd29922',
               '已处理': '2ea043',
-              '已报价': '8250df',
               '加急': 'cf222e',
             };
             for (const [name, color] of Object.entries(palette)) {
@@ -41,11 +41,22 @@ jobs:
               } catch (e) {
                 if (e.status === 404) {
                   await github.rest.issues.createLabel({ owner, repo, name, color });
+                } else {
+                  throw e;
                 }
               }
             }
 
+            // 确保反馈和待处理标签存在于当前 Issue 上
+            const missing = ['反馈', '待处理'].filter(name => !labels.includes(name));
+            if (missing.length) {
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: issue.number, labels: missing,
+              });
+            }
+
             // 3. 按正文关键词自动加标签，方便后台筛
+            // 3. 标签已确保存在，继续按正文关键词分诊
             const body = (issue.body || '').toLowerCase();
             const extra = [];
             if (/加急|尽快|着急|紧急|今天|明天/.test(body)) extra.push('加急');
