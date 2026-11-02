@@ -66,10 +66,10 @@
 ├── avatar.jpg                          # 创始人头像
 ├── .nojekyll                           # 让 Pages 跳过 Jekyll 构建
 ├── .github/
-│   └── ISSUE_TEMPLATE/feedback.yml     # 技术反馈表单
-└── automation/                         # 可选 Actions，启用方法见下节
-    ├── triage.yml                      # 自动分诊：打标 + 受理回执
-    └── stats.yml                       # 定时统计：聚合 → 提交 stats.json
+│   ├── ISSUE_TEMPLATE/feedback.yml     # 技术反馈表单
+│   └── workflows/
+│       ├── triage.yml                  # 新反馈自动分诊
+│       └── stats.yml                   # 自动聚合并更新 stats.json
 ```
 
 ---
@@ -89,33 +89,16 @@
 
 ---
 
-## 可选：启用 Actions 自动分诊与定时统计
+## GitHub Actions 自动化
 
-`automation/` 下的两个工作流提供两项增强：
+两个工作流已经放在 GitHub 可识别的 `.github/workflows/` 目录：
 
-- **triage.yml** —— 新反馈进来时补管理标签、按关键词判「加急」、自动留受理回执。
-- **stats.yml** —— 每 6 小时聚合一次并提交 `stats.json`（让看板不必再走实时 API）。
+- **triage.yml**：收到带「反馈」标签的新 Issue 后，按关键词补充「加急」标签，并自动回复受理信息。
+- **stats.yml**：在反馈新增、关闭、重新打开或标签变化时重新统计；另外每 6 小时定时统计，也支持手动触发。运行后将聚合结果写入 `stats.json`。
 
-它们在仓库里但尚未生效，因为 GitHub 只识别 `.github/workflows/` 下的文件。启用只需两步：
+首次使用时请到仓库 **Settings → Actions → General** 确认 Actions 允许运行，并确认工作流的 `GITHUB_TOKEN` 有权更新 `stats.json`（`contents: write`）。随后进入 **Actions → 反馈数据统计 → Run workflow** 手动运行一次，确认工作流成功且 `stats.json` 的 `updatedAt` 更新为有效时间。
 
-**方式 A（网页，推荐）**
-
-1. 打开 `automation/triage.yml` 复制全部内容；
-2. 点击 https://github.com/ghb-onb/hb-digital/new/main/.github/workflows/triage.yml ——文件名已预填，粘贴内容后提交；
-3. 对 `stats.yml` 重复一次：https://github.com/ghb-onb/hb-digital/new/main/.github/workflows/stats.yml
-4. 到 **Settings → Actions → General** 确认 Actions 已允许运行，Workflow permissions 选 *Read and write*。
-
-**方式 B（本机 git）**
-
-```bash
-git pull
-mkdir -p .github/workflows
-git mv automation/*.yml .github/workflows/
-git commit -m "ci: 启用自动分诊与定时统计" && git push
-```
-
-启用后可以删掉 `automation/`。两项都是纯增强，不启用也不影响反馈的提交、存储、管理与展示。
-
+首页看板在快照有效时读取 `stats.json`；快照未生成或无有效时间时，才使用匿名 Issues API 兜底。首次成功运行之后，看板即可优先使用静态快照。
 ---
 
 ## 安全设计
