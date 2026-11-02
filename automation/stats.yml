@@ -1,4 +1,4 @@
-name: 咨询数据统计
+name: 反馈数据统计
 
 # 计算层 + 数据导出：把 Issues 聚合成 stats.json，
 # 供首页数据看板直接读取（前端只读静态 JSON，不打 API，不会被限流）。
@@ -34,7 +34,7 @@ jobs:
             let items = [];
             for (let page = 1; page <= 10; page++) {
               const { data } = await github.rest.issues.listForRepo({
-                owner, repo, labels: '咨询', state: 'all',
+                owner, repo, labels: '反馈', state: 'all',
                 per_page: 100, page, sort: 'created', direction: 'desc',
               });
               if (!data.length) break;
@@ -69,7 +69,7 @@ jobs:
             const byCategory = {};
             for (const i of items) {
               const body = i.body || '';
-              const m = body.match(/### 需求类型\s*\n+\s*([^\n]+)/);
+              const m = body.match(/### 反馈类型\s*\n+\s*([^\n]+)/);
               const key = m ? m[1].trim() : '未分类';
               byCategory[key] = (byCategory[key] || 0) + 1;
             }
