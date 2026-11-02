@@ -38,8 +38,13 @@ body{
   line-height:1.6;
 }
 
-/* 3D 背景画布 */
+/* 3D 背景画布 + 阅读遮罩 */
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+#veil{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 82% 62% at 50% 42%,rgba(2,6,23,.58),rgba(2,6,23,.32) 55%,rgba(2,6,23,.05) 100%);
+}
+section,footer{position:relative;z-index:1;}
 
 /* 底部光晕 + 网格（在画布之后作层次） */
 body::before{
@@ -113,7 +118,7 @@ nav a:hover::after{width:100%;}
   filter:drop-shadow(0 0 24px rgba(56,189,248,.45));
 }
 @keyframes shine{to{background-position:200% center;}}
-.hero p{font-size:clamp(16px,2.4vw,22px);color:var(--muted);max-width:680px;margin-bottom:38px;}
+.hero p{font-size:clamp(16px,2.4vw,22px);color:var(--muted);max-width:680px;margin-bottom:38px;text-shadow:0 1px 12px rgba(0,0,0,.6);}
 .hero .cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
 
 .btn{display:inline-block;padding:15px 34px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;transition:.3s;}
@@ -124,13 +129,18 @@ nav a:hover::after{width:100%;}
 
 /* 通用区块 */
 section{padding:110px 10%;}
-.section-title{font-size:clamp(32px,5vw,46px);text-align:center;margin-bottom:56px;font-weight:700;}
+.section-title{font-size:clamp(32px,5vw,46px);text-align:center;margin-bottom:56px;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.65);}
 .section-title .grad{
   background:linear-gradient(120deg,#38bdf8,#2563eb);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   text-shadow:0 0 30px rgba(56,189,248,.35);
 }
-.about{max-width:860px;margin:auto;text-align:center;font-size:18px;color:var(--muted);}
+.about{
+  max-width:860px;margin:auto;text-align:center;font-size:18px;color:var(--muted);
+  background:rgba(15,23,42,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:40px;border-radius:22px;border:1px solid var(--border);
+  text-shadow:0 1px 10px rgba(0,0,0,.5);
+}
 .about strong{color:var(--text);}
 
 /* 玻璃卡片 */
@@ -192,7 +202,7 @@ section{padding:110px 10%;}
 .copy-btn{background:rgba(56,189,248,.14);color:var(--accent);border:1px solid var(--border);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.3s;}
 .copy-btn:hover{background:var(--accent);color:var(--bg);}
 
-footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--faint);font-size:14px;}
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--faint);font-size:14px;text-shadow:0 1px 8px rgba(0,0,0,.6);}
 footer .grad{
   background:linear-gradient(120deg,#38bdf8,#2563eb);
   -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600;
@@ -229,6 +239,7 @@ footer .grad{
 <body>
 
 <canvas id="bg"></canvas>
+<div id="veil"></div>
 
 <header id="header">
   <div class="logo"><span class="dot"></span>HB Digital</div>
@@ -410,7 +421,7 @@ footer .grad{
     const g=new THREE.BufferGeometry();
     g.setAttribute('position',new THREE.BufferAttribute(pos,3));
     g.setAttribute('color',new THREE.BufferAttribute(col,3));
-    const m=new THREE.PointsMaterial({size:0.22,depthWrite:false,blending:THREE.AdditiveBlending,vertexColors:true,transparent:true,opacity:0.95});
+    const m=new THREE.PointsMaterial({size:0.22,depthWrite:false,blending:THREE.AdditiveBlending,vertexColors:true,transparent:true,opacity:0.8});
     return new THREE.Points(g,m);
   }
   const galaxy=makeGalaxy();
@@ -426,7 +437,7 @@ footer .grad{
       pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.sin(p)*Math.sin(t); pos[i*3+2]=r*Math.cos(p);
     }
     const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    const m=new THREE.PointsMaterial({color:0xffffff,size:0.5,transparent:true,opacity:0.75,depthWrite:false});
+    const m=new THREE.PointsMaterial({color:0xffffff,size:0.5,transparent:true,opacity:0.55,depthWrite:false});
     scene.add(new THREE.Points(g,m));
   })();
 
@@ -454,7 +465,7 @@ footer .grad{
     return r;
   }
   const rocket=makeRocket();
-  function resetRocket(){ rocket.position.set((Math.random()-0.5)*22,-34,-6); rocket.userData.speed=0.12; rocket.rotation.z=(Math.random()-0.5)*0.2; }
+  function resetRocket(){ const side=Math.random()<.5?-1:1; rocket.position.set(side*(15+Math.random()*10),-34,-6); rocket.userData.speed=0.12; rocket.rotation.z=(Math.random()-0.5)*0.2; }
   resetRocket();
   scene.add(rocket);
 
