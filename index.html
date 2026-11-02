@@ -426,14 +426,14 @@ footer .grad{
       <div class="layer">
         <div class="n">03 / 鉴权层</div>
         <h4>最小权限令牌</h4>
-        <p>管理台只持一个能读写本仓库 Issues 的细粒度令牌，令牌留在本机，前端不存任何密钥。</p>
-        <div class="tech">Fine-grained PAT · RBAC</div>
+        <p>管理台只持一个仅能读写本仓库 Issues 的细粒度令牌，存在标签页的 sessionStorage，关页即失效。令牌会随每次管理请求发给 GitHub API 由服务端鉴权，前端不留长期凭证。</p>
+        <div class="tech">Fine-grained PAT · sessionStorage</div>
       </div>
       <div class="layer">
         <div class="n">04 / 计算层</div>
-        <h4>服务端分诊 + 客户端聚合</h4>
-        <p>表单提交时由 GitHub 校验字段并自动打上分流标签；管理台一键聚合统计写回仓库。</p>
-        <div class="tech">Issue Forms · Contents API</div>
+        <h4>服务端校验 + 双路径聚合</h4>
+        <p>Issue Forms 在提交时校验必填项并自动打标；看板优先读 Actions 聚合出的 stats.json 快照，快照缺失时才匿名读公开 Issues 自行汇总。</p>
+        <div class="tech">Issue Forms · stats.json 快照 · 匿名 API 兜底</div>
       </div>
     </div>
     <div class="dash">
@@ -718,23 +718,45 @@ setTimeout(function(){ if(!window.__hb3d){ document.body.classList.add('no-webgl
 /* 数据看板
    两条路径，互为兜底：
    1) 优先读 Actions 定时聚合的 stats.json（静态文件，零 API 消耗）
-   2) 没有快照或快照为空时，匿名读公开 Issues 自行汇总（带 10 分钟本地缓存，
-      避免同一访客反复请求消耗未认证配额） */
+   2) 快照缺失或 updatedAt 不是合法日期时，匿名读公开 Issues 自行汇总
+      （带 10 分钟本地缓存，避免同一访客反复请求消耗未认证配额）
+
+   快照是否有效只看 updatedAt，不看 total：
+   真实的「0 条反馈」也是有效数据，必须原样展示。
+   两条路径都拿不到数据时显示「—」，不把未知状态伪装成 0。 */
 (function(){
   var API = 'https://api.github.com/repos/ghb-onb/hb-digital/issues';
   var LABEL = '反馈';
   var CACHE_KEY = 'hb_dash_v1';
   var TTL = 10 * 60 * 1000;
+  var UNKNOWN = '—';
 
   function set(id, v){
     var el = document.getElementById(id);
     if (el) el.textContent = v;
   }
+  function num(v){
+    return (typeof v === 'number' && isFinite(v)) ? v : UNKNOWN;
+  }
   function paint(d){
-    set('dTotal', d.total || 0);
-    set('dPending', d.pending || 0);
-    set('dClosed', d.closed || 0);
-    set('dWeek', d.week || 0);
+    set('dTotal',   num(d.total));
+    set('dPending', num(d.pending));
+    set('dClosed',  num(d.closed));
+    set('dWeek',    num(d.week));
+  }
+  function unavailable(){
+    set('dTotal', UNKNOWN);
+    set('dPending', UNKNOWN);
+    set('dClosed', UNKNOWN);
+    set('dWeek', UNKNOWN);
+  }
+
+  /* 有效快照 = 有 updatedAt 且能被解析成真实日期。
+     未生成过（null）或占位值一律视为无效，走实时兜底。 */
+  function hasValidSnapshot(s){
+    if (!s || typeof s !== 'object' || !s.updatedAt) return false;
+    var t = Date.parse(s.updatedAt);
+    return !isNaN(t);
   }
 
   function live(){
@@ -759,13 +781,13 @@ setTimeout(function(){ if(!window.__hb3d){ document.body.classList.add('no-webgl
         paint(d);
         try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: now, d: d })); } catch (e) {}
       })
-      .catch(function(){ paint({ total: 0, pending: 0, closed: 0, week: 0 }); });
+      .catch(unavailable);
   }
 
   fetch('stats.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(s){
-      if (s && s.total > 0) {
+      if (hasValidSnapshot(s)) {
         paint({ total: s.total, pending: s.open, closed: s.closed, week: s.thisWeek });
       } else {
         live();
