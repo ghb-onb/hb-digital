@@ -1,0 +1,77 @@
+name: 咨询需求
+description: 提交你的需求，我会在 1 个工作日内回复
+title: "[咨询] "
+labels: ["咨询", "待处理"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 填写说明
+
+        填得越具体，我判断得越准，报价也越实在。三段就够：**现在怎么做 → 想变成什么样 → 多久做一次**。
+
+        > ⚠️ **重要：这个表单的内容会公开显示在本仓库的 Issues 中**（这是本站的留言系统）。
+        > 请**只留邮箱或微信号**，不要填手机号、身份证、公司内部资料等敏感信息。
+        > 完整需求细节可以后续私信沟通。
+
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 邮箱或微信号，我会用这个回复你
+      placeholder: 例如：you@example.com
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 需求类型
+      description: 不确定就选「其他 / 还没想好」
+      options:
+        - 办公自动化（Excel / Word / PDF 批量处理）
+        - 数据处理与分析（清洗、汇总、可视化）
+        - 小工具 / 网页开发
+        - 测试与效率提升（接口校验、自动化测试）
+        - Power BI 报表可视化
+        - 其他 / 还没想好
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: 现在是怎么做的
+      description: 目前这件事由谁做、用什么工具、大概耗时多久
+      placeholder: 例如：每周一我从 5 个系统导出 Excel，手动合并去重，大概要花 2 小时。
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 希望变成什么样
+      description: 你理想中的结果，越具体越好
+      placeholder: 例如：点一下按钮就能生成一张汇总表，重复数据自动标出来。
+    validations:
+      required: true
+
+  - type: input
+    id: frequency
+    attributes:
+      label: 多久需要做一次
+      placeholder: 例如：每周一次 / 每天 / 只用一次
+
+  - type: input
+    id: deadline
+    attributes:
+      label: 期望完成时间
+      placeholder: 例如：两周内 / 不急
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我理解此内容将公开显示在 Issues 中，且没有填写敏感隐私信息
+          required: true
