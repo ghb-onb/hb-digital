@@ -52,7 +52,7 @@
 
 判定快照是否有效**只看 `updatedAt`，不看 `total`**：真实的「0 条反馈」也是有效数据，会原样展示 0。两条路径都拿不到数据时显示 `—`，不会把未知状态伪装成 0。
 
-这样即使 Actions 没启用，看板也不会是一块死数字；启用后又能把 API 配额消耗降到零。
+这样即使 Actions 暂停、延迟或额度受限，看板也不会变成一块死数字；正常运行时又能把 API 配额消耗降到零。
 
 ---
 
@@ -93,12 +93,13 @@
 
 两个工作流已经放在 GitHub 可识别的 `.github/workflows/` 目录：
 
-- **triage.yml**：收到带「反馈」标签的新 Issue 后，按关键词补充「加急」标签，并自动回复受理信息。
+- **triage.yml**：新 Issue 只要带「反馈」标签**或以 `[反馈]` 开头**，都会进入分诊；先幂等补齐缺失的管理标签，再按关键词补「加急」，最后留一条受理回执。
 - **stats.yml**：在反馈新增、关闭、重新打开或标签变化时重新统计；另外每 6 小时定时统计，也支持手动触发。运行后将聚合结果写入 `stats.json`。
 
-首次使用时请到仓库 **Settings → Actions → General** 确认 Actions 允许运行，并确认工作流的 `GITHUB_TOKEN` 有权更新 `stats.json`（`contents: write`）。随后进入 **Actions → 反馈数据统计 → Run workflow** 手动运行一次，确认工作流成功且 `stats.json` 的 `updatedAt` 更新为有效时间。
+**启用状态：已开启并验证通过**（2026-11-02 手动运行「反馈数据统计」成功，`updatedAt` 已更新为真实时间）。仓库级默认 `GITHUB_TOKEN` 权限是只读，但两个工作流都各自声明了所需权限（分诊 `issues: write`、统计 `issues: read` + `contents: write`），所以不需要改仓库默认设置。若日后换仓库重建，仍需到 **Settings → Actions → General** 确认 Actions 允许运行。
 
 首页看板在快照有效时读取 `stats.json`；快照未生成或无有效时间时，才使用匿名 Issues API 兜底。首次成功运行之后，看板即可优先使用静态快照。
+
 ---
 
 ## 安全设计
