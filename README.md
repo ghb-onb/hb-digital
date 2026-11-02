@@ -99,8 +99,8 @@
 **方式 A（网页，推荐）**
 
 1. 打开 `automation/triage.yml` 复制全部内容；
-2. 访问 `https://github.com/ghb-onb/hb-digital/new/main/.github/workflows`，文件名填 `triage.yml`，粘贴提交；
-3. 对 `stats.yml` 重复一次；
+2. 点击 https://github.com/ghb-onb/hb-digital/new/main/.github/workflows/triage.yml ——文件名已预填，粘贴内容后提交；
+3. 对 `stats.yml` 重复一次：https://github.com/ghb-onb/hb-digital/new/main/.github/workflows/stats.yml
 4. 到 **Settings → Actions → General** 确认 Actions 已允许运行，Workflow permissions 选 *Read and write*。
 
 **方式 B（本机 git）**
