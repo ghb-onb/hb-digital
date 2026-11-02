@@ -201,7 +201,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
   </ol>
   <input id="tokenInput" type="password" placeholder="github_pat_..." autocomplete="off">
   <p style="font-size:12px;color:var(--faint);margin-bottom:0">
-    令牌只保存在本标签页的 sessionStorage 里，关闭标签页即失效，不会写入磁盘，也不会发送到任何第三方服务器。
+    令牌只保存在本标签页的 sessionStorage，关闭标签页即失效，不写入磁盘。它只会随你的管理请求发送给 GitHub API（鉴权必须如此），不会发往任何其他服务器。
   </p>
   <div class="row">
     <button class="btn" id="cancelLogin">取消</button>
@@ -347,7 +347,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
       return '<div class="item" data-num="' + i.number + '">' +
         '<div class="num">#' + i.number + '</div>' +
         '<div class="main">' +
-          '<div class="t">' + esc((i.title || '').replace(/^\[(?:咨询|反馈)\]\s*/, '')) + '</div>' +
+          '<div class="t">' + esc((i.title || '').replace(/^\[反馈\]\s*/, '')) + '</div>' +
           '<div class="meta">' +
             '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="" loading="lazy">' +
             '<span>' + esc(i.user && i.user.login || '未知') + '</span>' +
@@ -378,7 +378,7 @@ textarea:focus{border-color:rgba(56,189,248,.5);}
     if (!i) return;
     current = i;
     $('dTitle').innerHTML = '<span style="color:var(--faint);font-size:13px">#' + i.number + '</span> ' +
-      esc((i.title || '').replace(/^\[(?:咨询|反馈)\]\s*/, ''));
+      esc((i.title || '').replace(/^\[反馈\]\s*/, ''));
     $('dBody').innerHTML =
       '<div style="display:flex;gap:9px;align-items:center;margin-bottom:16px;font-size:12px;color:var(--faint)">' +
         '<img class="avatar" src="' + esc(i.user && i.user.avatar_url || '') + '" alt="">' +
