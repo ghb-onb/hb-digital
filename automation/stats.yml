@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: consult-stats
+  group: feedback-stats
   cancel-in-progress: true
 
 jobs:
@@ -23,14 +23,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 聚合咨询数据
+      - name: 聚合反馈数据
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const { owner, repo } = context.repo;
 
-            // 1. 分页拉全部咨询（state=all）
+            // 1. 分页拉全部反馈（state=all）
             let items = [];
             for (let page = 1; page <= 10; page++) {
               const { data } = await github.rest.issues.listForRepo({
@@ -84,7 +84,7 @@ jobs:
               byCategory,
               recent: items.slice(0, 5).map(i => ({
                 number: i.number,
-                title: (i.title || '').replace(/^\[咨询\]\s*/, ''),
+                title: (i.title || '').replace(/^\[反馈\]\s*/, ''),
                 state: i.state,
                 createdAt: i.created_at,
               })),
@@ -103,5 +103,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add stats.json
-          git commit -m "chore(stats): 更新咨询统计 $(date -u +%Y-%m-%dT%H:%MZ)"
+          git commit -m "chore(stats): 更新反馈统计 $(date -u +%Y-%m-%dT%H:%MZ)"
           git push
