@@ -184,7 +184,7 @@ section{padding:110px 10%;}
 .contact-box .label{color:var(--faint);font-size:14px;}
 .contact-box .value{color:var(--text);font-size:16px;font-weight:500;text-align:right;}
 
-/* 咨询转化入口 */
+/* 联系区：客户通道（邮件）+ 技术通道（公开反馈） */
 .cta-box{
   max-width:820px;margin:0 auto 30px;text-align:center;
   padding:36px 30px;border-radius:22px;
@@ -420,7 +420,7 @@ footer .grad{
       <div class="layer">
         <div class="n">02 / 数据层</div>
         <h4>Issues 当数据库</h4>
-        <p>每条咨询就是一条 Issue，自带标签、时间戳、评论与状态流转，检索分页开箱可用。</p>
+        <p>本站的公开技术反馈就是一条 Issue，自带标签、时间戳、评论与状态流转，检索分页开箱可用。</p>
         <div class="tech">GitHub Issues API</div>
       </div>
       <div class="layer">
@@ -437,13 +437,13 @@ footer .grad{
       </div>
     </div>
     <div class="dash">
-      <div class="cell"><div class="v" id="dTotal">—</div><div class="k">累计咨询</div></div>
+      <div class="cell"><div class="v" id="dTotal">—</div><div class="k">累计反馈</div></div>
+      <div class="cell"><div class="v" id="dPending">—</div><div class="k">待处理</div></div>
       <div class="cell"><div class="v" id="dClosed">—</div><div class="k">已处理</div></div>
-      <div class="cell"><div class="v" id="dResp">—</div><div class="k">平均响应（小时）</div></div>
       <div class="cell"><div class="v" id="dWeek">—</div><div class="k">本周新增</div></div>
     </div>
     <p class="dash-foot">
-      数据由 Actions 从 Issues 自动聚合，非手工填写 · <a href="admin.html">进入管理后台 →</a>
+      数据来自仓库 Issues 的真实聚合，非手工填写 · <a href="admin.html">进入管理后台 →</a>
     </p>
   </div>
 </section>
@@ -451,15 +451,15 @@ footer .grad{
 <section id="contact" class="reveal">
   <h2 class="section-title">联系 <span class="grad">我们</span></h2>
   <div class="cta-box">
-    <h3>说说你手头那件<span class="grad">烦人的事</span></h3>
-    <p>花三分钟填个表，我会在 1 个工作日内回复，给出思路和大概费用。不确定能不能做，也可以先问。</p>
+    <h3>有技术需求？<span class="grad">直接联系我</span></h3>
+    <p>描述你遇到的问题，我会根据实际需求评估方案。不需要注册任何账号，内容也不会出现在公开页面上。</p>
     <div class="cta-actions">
-      <a class="btn btn-primary" href="https://github.com/ghb-onb/hb-digital/issues/new?template=consult.yml" target="_blank" rel="noopener">📮 提交咨询需求</a>
-      <a class="btn btn-outline" href="mailto:2195154945@qq.com?subject=%E5%92%A8%E8%AF%A2%EF%BC%9A">直接发邮件</a>
+      <a class="btn btn-primary" href="mailto:2195154945@qq.com?subject=%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">✉️ 邮件联系我</a>
+      <a class="btn btn-outline" href="https://github.com/ghb-onb/hb-digital/issues/new?template=feedback.yml" target="_blank" rel="noopener">🐞 技术反馈（公开）</a>
     </div>
     <p class="note">
-      ⚠️ 表单提交需要 GitHub 账号，内容会公开显示在仓库 Issues 中——请<b>只留邮箱或微信号</b>，别填敏感信息。<br>
-      嫌麻烦就直接发邮件到 <b>2195154945@qq.com</b>，效果一样。
+      左边是<b>客户通道</b>：邮件内容私密，可以发截图和附件，适合聊具体需求。<br>
+      右边是<b>技术反馈通道</b>：公开的，只用来报告本站 Bug 或提建议——请勿在其中填写手机号、公司资料等敏感信息。
     </p>
   </div>
   <div class="contact-box">
@@ -715,24 +715,63 @@ setTimeout(function(){ if(!window.__hb3d){ document.body.classList.add('no-webgl
 </script>
 
 <script>
-/* 数据看板：读取 Actions 定时生成的 stats.json，
-   纯静态文件，不打 GitHub API，因此不会触发匿名限流。 */
+/* 数据看板
+   两条路径，互为兜底：
+   1) 优先读 Actions 定时聚合的 stats.json（静态文件，零 API 消耗）
+   2) 没有快照或快照为空时，匿名读公开 Issues 自行汇总（带 10 分钟本地缓存，
+      避免同一访客反复请求消耗未认证配额） */
 (function(){
-  var set = function(id, v){
+  var API = 'https://api.github.com/repos/ghb-onb/hb-digital/issues';
+  var LABEL = '反馈';
+  var CACHE_KEY = 'hb_dash_v1';
+  var TTL = 10 * 60 * 1000;
+
+  function set(id, v){
     var el = document.getElementById(id);
     if (el) el.textContent = v;
-  };
+  }
+  function paint(d){
+    set('dTotal', d.total || 0);
+    set('dPending', d.pending || 0);
+    set('dClosed', d.closed || 0);
+    set('dWeek', d.week || 0);
+  }
+
+  function live(){
+    var now = Date.now();
+    try {
+      var c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+      if (c && now - c.at < TTL) { paint(c.d); return; }
+    } catch (e) { /* 隐私模式下 sessionStorage 不可用，忽略 */ }
+
+    fetch(API + '?labels=' + encodeURIComponent(LABEL) + '&state=all&per_page=100', {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    })
+      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(list){
+        list = (list || []).filter(function(i){ return !i.pull_request; });
+        var d = {
+          total: list.length,
+          closed: list.filter(function(i){ return i.state === 'closed'; }).length,
+          pending: list.filter(function(i){ return i.state !== 'closed'; }).length,
+          week: list.filter(function(i){ return now - new Date(i.created_at).getTime() < 7 * 864e5; }).length
+        };
+        paint(d);
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: now, d: d })); } catch (e) {}
+      })
+      .catch(function(){ paint({ total: 0, pending: 0, closed: 0, week: 0 }); });
+  }
+
   fetch('stats.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function(s){
-      set('dTotal',  s.total || 0);
-      set('dClosed', s.closed || 0);
-      set('dResp',   (s.avgResponseHours === null || s.avgResponseHours === undefined) ? '—' : s.avgResponseHours);
-      set('dWeek',   s.thisWeek || 0);
+      if (s && s.total > 0) {
+        paint({ total: s.total, pending: s.open, closed: s.closed, week: s.thisWeek });
+      } else {
+        live();
+      }
     })
-    .catch(function(){
-      set('dTotal', 0); set('dClosed', 0); set('dResp', '—'); set('dWeek', 0);
-    });
+    .catch(live);
 })();
 </script>
 
