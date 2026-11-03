@@ -187,6 +187,41 @@ h2{
   transition:background .2s var(--ease),color .2s var(--ease);
 }
 .copy-btn:hover{background:rgba(0,0,0,.05);color:var(--ink)}
+.copy-btn[data-done="1"]{color:var(--accent);border-color:rgba(0,113,227,.4)}
+
+/* ---------- 加 QQ 弹窗 ---------- */
+#qqModal{
+  position:fixed;inset:0;z-index:100;display:none;
+  align-items:center;justify-content:center;padding:24px;
+  background:rgba(0,0,0,.34);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+#qqModal.on{display:flex;animation:qqFade .22s var(--ease)}
+@keyframes qqFade{from{opacity:0}to{opacity:1}}
+.qq-panel{
+  position:relative;width:100%;max-width:384px;background:#fff;border-radius:24px;
+  padding:36px 26px 24px;text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.26);
+  animation:qqIn .34s var(--ease);
+}
+@keyframes qqIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.qq-panel h3{margin:0 0 6px;font-size:23px;font-weight:600;letter-spacing:-.02em}
+.qq-panel .sub{margin:0 0 20px;font-size:14px;color:var(--ink-2);line-height:1.5}
+.qq-num{
+  margin:0 0 18px;padding:15px 0;border-radius:14px;background:var(--surface);
+  font-size:31px;font-weight:600;letter-spacing:.01em;line-height:1.1;
+  font-variant-numeric:tabular-nums;user-select:all;-webkit-user-select:all;
+}
+.qq-panel .stack{display:flex;flex-direction:column;gap:10px}
+.qq-panel .btn{width:100%;font-size:16px}
+.qq-hint{margin:18px 0 0;font-size:12.5px;line-height:1.65;color:var(--ink-3);text-align:left}
+.qq-hint b{color:var(--ink-2);font-weight:600}
+#qqClose{
+  position:absolute;top:12px;right:12px;width:32px;height:32px;border:0;border-radius:50%;
+  background:rgba(0,0,0,.05);color:var(--ink-2);font-size:17px;line-height:1;
+  cursor:pointer;font-family:inherit;transition:background .2s var(--ease);
+}
+#qqClose:hover{background:rgba(0,0,0,.1);color:var(--ink)}
 
 /* ---------- 页脚 ---------- */
 footer{background:var(--surface);padding:40px 0 48px;font-size:12.5px;color:var(--ink-3)}
@@ -405,12 +440,12 @@ footer .slogan{color:var(--ink-2)}
         <h2>有技术需求？直接联系我。</h2>
         <p class="lede">描述你遇到的问题，我会根据实际需求评估方案。不需要注册任何账号，内容也不会出现在公开页面上。</p>
         <div class="actions">
-          <a class="btn btn-fill" href="mailto:2195154945@qq.com?subject=%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">邮件联系我</a>
-          <a class="btn btn-outline" href="https://github.com/ghb-onb/hb-digital/issues/new?template=feedback.yml" target="_blank" rel="noopener">技术反馈（公开）</a>
+          <button class="btn btn-fill" id="openQQ" type="button">加我 QQ</button>
+          <a class="btn btn-outline" href="mailto:2195154945@qq.com?subject=%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">邮件联系我</a>
         </div>
         <p class="note">
-          左边是<b>客户通道</b>：邮件内容私密，可以发截图和附件，适合聊具体需求。<br>
-          右边是<b>技术反馈通道</b>：公开的，只用来报告本站 Bug 或提建议——请勿在其中填写手机号、公司资料等敏感信息。
+          <b>加 QQ</b> 最快，一两句话就能说清问题；<b>邮件</b>更适合发截图和附件。<br>
+          只是发现本站 Bug？去 <a href="https://github.com/ghb-onb/hb-digital/issues/new?template=feedback.yml" target="_blank" rel="noopener">GitHub 技术反馈（公开）</a>，那里请勿填写手机号、公司资料等敏感信息。
         </p>
       </div>
 
@@ -418,6 +453,7 @@ footer .slogan{color:var(--ink-2)}
         <div class="row"><span class="label">品牌</span><span class="value">HB Digital</span></div>
         <div class="row"><span class="label">创始人</span><span class="value">贵浩滨</span></div>
         <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com<button class="copy-btn" id="copyEmail">复制</button></span></div>
+        <div class="row"><span class="label">QQ</span><span class="value">2195154945<button class="copy-btn" id="copyQQ">复制</button></span></div>
         <div class="row"><span class="label">业务方向</span><span class="value">Python &amp; Power BI 技术解决方案 · 自动化 / 数据处理 / 可视化 / 效率工具</span></div>
         <div class="row"><span class="label">Slogan</span><span class="value">用 Python 把麻烦交给我们</span></div>
       </div>
@@ -557,6 +593,102 @@ footer .slogan{color:var(--ink-2)}
       }
     })
     .catch(live);
+})();
+</script>
+
+<div id="qqModal" role="dialog" aria-modal="true" aria-labelledby="qqTitle" aria-hidden="true">
+  <div class="qq-panel">
+    <button id="qqClose" type="button" aria-label="关闭">✕</button>
+    <h3 id="qqTitle">加我 QQ</h3>
+    <p class="sub">不用扫码，复制号码或点一下直接唤起。</p>
+    <div class="qq-num" id="qqNum">2195154945</div>
+    <div class="stack">
+      <button class="btn btn-fill" id="qqCopy" type="button">复制 QQ 号</button>
+      <a class="btn btn-outline" id="qqOpen" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=2195154945&amp;website=ghb-onb.github.io">在 QQ 中打开</a>
+    </div>
+    <p class="qq-hint">
+      <b>电脑</b>：装了 QQ 会直接弹出「添加好友」窗口。<br>
+      <b>手机</b>：点「在 QQ 中打开」，或复制号码到 QQ 里搜索。<br>
+      没反应一般是浏览器拦截了唤起，手动搜号一样能加上。
+    </p>
+  </div>
+</div>
+
+<script>
+/* 加 QQ 弹窗
+   不依赖任何服务端：号码直接写在页面上，唤起用 QQ 的 URL Scheme。
+   电脑走 tencent://AddContact，手机走 mqqwpa://im/chat。
+   Schema 唤起不可靠（浏览器/客户端版本都会拦），所以「复制号码」是主路径，
+   唤起只是加速手段——按钮文案和提示都按这个前提写。 */
+(function(){
+  var QQ = '2195154945';
+  var modal = document.getElementById('qqModal');
+  if(!modal) return;
+  var openBtn = document.getElementById('openQQ');
+  var closeBtn = document.getElementById('qqClose');
+  var qqOpen = document.getElementById('qqOpen');
+  var isMobile = /Android|iPhone|iPad|iPod|HarmonyOS|Mobile/i.test(navigator.userAgent);
+
+  function scheme(){
+    return isMobile
+      ? 'mqqwpa://im/chat?chat_type=wpa&uin=' + QQ + '&version=1&src_type=web&web_src=ghb-onb.github.io'
+      : 'tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=' + QQ + '&website=ghb-onb.github.io';
+  }
+
+  function open(){
+    qqOpen.href = scheme();
+    modal.classList.add('on');
+    modal.setAttribute('aria-hidden', 'false');
+    document.documentElement.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function close(){
+    modal.classList.remove('on');
+    modal.setAttribute('aria-hidden', 'true');
+    document.documentElement.style.overflow = '';
+    openBtn.focus();
+  }
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('on')) close();
+  });
+
+  function copy(text, btn, label){
+    function done(){
+      btn.textContent = '已复制';
+      btn.setAttribute('data-done', '1');
+      setTimeout(function(){ btn.textContent = label; btn.removeAttribute('data-done'); }, 1600);
+    }
+    function fallback(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if(ok){ done(); } else { btn.textContent = '请手动复制'; setTimeout(function(){ btn.textContent = label; }, 1600); }
+      }catch(err){
+        btn.textContent = '请手动复制';
+        setTimeout(function(){ btn.textContent = label; }, 1600);
+      }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    }else{
+      fallback();
+    }
+  }
+
+  document.getElementById('qqCopy').addEventListener('click', function(){ copy(QQ, this, '复制 QQ 号'); });
+  var rowCopy = document.getElementById('copyQQ');
+  if(rowCopy){ rowCopy.addEventListener('click', function(){ copy(QQ, this, '复制'); }); }
 })();
 </script>
 
