@@ -176,6 +176,24 @@ h1{
   background:rgba(0,0,0,.05);font-size:12.5px;color:var(--ink-2);
 }
 
+/* 小卡：其他委托 */
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mini article{
+  display:flex;flex-direction:column;gap:9px;
+  background:var(--bg);border:1px solid var(--hair);border-radius:14px;
+  padding:clamp(18px,2.4vw,24px);
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease);
+}
+.mini article:hover{border-color:rgba(0,0,0,.2);box-shadow:0 10px 28px rgba(0,0,0,.05)}
+.mini h3{margin:0;font-size:16.5px;font-weight:600;letter-spacing:-.012em}
+.mini .meta{margin:0;font-size:12px;line-height:1.5;color:var(--ink-3);letter-spacing:0}
+.mini p{margin:0;font-size:13.8px;line-height:1.62;color:var(--ink-2)}
+.mini .res{
+  margin-top:auto;padding-top:11px;border-top:1px solid var(--hair);
+  font-size:12.8px;line-height:1.6;color:var(--ink-3);
+}
+.mini .res b{color:var(--ink);font-weight:600}
+
 /* ---------- 能力（深色） ---------- */
 .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair-dark);border:1px solid var(--hair-dark);border-radius:var(--radius);overflow:hidden}
 .skill{background:#0a0a0c;padding:clamp(24px,3vw,34px)}
@@ -274,6 +292,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
   #burger{display:block}
   .pj{grid-template-columns:1fr;gap:22px}
   .skills{grid-template-columns:1fr}
+  .mini{grid-template-columns:1fr}
   .tl{grid-template-columns:1fr;gap:6px}
 }
 @media(max-width:600px){
@@ -351,7 +370,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
     <div class="sec-head reveal">
       <span class="eyebrow">Projects</span>
       <h2>做过的项目</h2>
-      <p>分两组：上面两个是真上线、能点开的东西；下面三个是能跑起来、有 CI 的技术项目。每个都按同一套顺序写——解决什么问题、我做了什么、核心实现、结果如何，数字都能核实。</p>
+      <p>分三组。前两个真上线、能点开；中间三条是别人委托的活，我用工具链做完；最后三个是能跑起来、有 CI 的技术项目。大项目都按同一套顺序写——问题、我做了什么、核心实现、结果，数字都能核实。</p>
     </div>
 
     <div class="projects">
@@ -459,6 +478,29 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
           <div class="pj-row pj-result"><dt>结果</dt><dd><b>23 个用例</b>验证六层之间的数据传递。真实浏览器执行与 LLM 用例生成属于后续计划，<span class="pj-note">当前未接入</span></dd></div>
         </dl>
       </article>
+
+      <p class="group-label reveal">其他委托 <em>· 别人给需求，我交出成品</em></p>
+
+      <div class="mini reveal">
+        <article>
+          <h3>三款作物生产流程图</h3>
+          <p class="meta">SVG · 信息设计 · 文献核对</p>
+          <p>建平荞麦、喀左小米、兴城花生，一款一张。农事环节和时间窗都要能对回文献，三张共用同一套图元与配色。</p>
+          <p class="res">交付<b>可编辑源文件</b>，改字改色不用重画</p>
+        </article>
+        <article>
+          <h3>论坛录像精剪</h3>
+          <p class="meta">FFmpeg · 字幕 · 时间码</p>
+          <p>单机位录了 50 分钟，要压成 3 分钟还能讲清谁说了什么。按语义断点重排，去掉重复和冷场。</p>
+          <p class="res">脚本<b>批量切片</b>并生成时间码对照表，不在时间轴上反复试错</p>
+        </article>
+        <article>
+          <h3>制版软件操作自动化</h3>
+          <p class="meta">Python · ctypes · user32.dll</p>
+          <p>一套没有 API 的 Windows 制版软件，参数只能一下下点进去，同样的录入要重复很多遍。</p>
+          <p class="res">用 ctypes 找窗口、发消息，把重复录入<b>脚本化</b>；第三方 GUI 库在这台机器上加载失败，所以直接调系统 API</p>
+        </article>
+      </div>
 
     </div>
   </div>
