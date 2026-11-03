@@ -135,6 +135,13 @@ h1{
 }
 
 /* ---------- 项目 ---------- */
+.group-label{
+  margin:clamp(30px,4vw,44px) 0 14px;display:flex;align-items:center;gap:14px;
+  font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--ink-3);
+}
+.group-label:first-of-type{margin-top:0}
+.group-label::after{content:"";flex:1;height:1px;background:var(--hair)}
+.group-label em{font-style:normal;color:var(--ink-2);font-weight:400;letter-spacing:0}
 .projects{display:grid;gap:18px}
 .pj{
   background:var(--bg);border:1px solid var(--hair);border-radius:var(--radius);
@@ -313,7 +320,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
     <p class="hero-meta reveal">河北工程大学 · 信息与计算科学 · 本科 2026 届</p>
     <p class="hero-ask reveal">
       找 <b>Python 开发 / 数据分析 / 测试开发</b> 方向的实习。
-      独立完成三个 Python 项目，累计 <b>78 个测试用例</b>，GitHub Actions 全部通过。
+      三个 Python 项目累计 <b>78 个测试用例</b>、CI 全部通过；另有一个在运营的企业官网（gtit.cc）和一个自建的个人站。
     </p>
     <div class="actions reveal">
       <a class="btn btn-fill" href="#projects">查看项目</a>
@@ -335,16 +342,57 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
 <section id="projects" class="sec surface">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Technical Projects</span>
-      <h2>技术项目</h2>
-      <p>每个项目按同一套顺序写：解决什么问题、我做了什么、核心实现、结果如何。数字都能在仓库里跑出来。</p>
+      <span class="eyebrow">Projects</span>
+      <h2>做过的项目</h2>
+      <p>分两组：上面两个是真上线、能点开的东西；下面三个是能跑起来、有 CI 的技术项目。每个都按同一套顺序写——解决什么问题、我做了什么、核心实现、结果如何，数字都能核实。</p>
     </div>
 
     <div class="projects">
+      <p class="group-label reveal">真实交付 <em>· 有域名、能点开、在运营</em></p>
 
       <article class="pj reveal">
         <div>
           <span class="pj-id">01</span>
+          <h3>GTIT 企业官网</h3>
+          <p class="line">给一家齿轮减速机出口企业做的英文站</p>
+          <p class="pj-tech">HTML · CSS · JavaScript<br>Bootstrap · GSAP · GitHub Pages</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://gtit.cc" target="_blank" rel="noopener">gtit.cc ↗</a>
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/my-website" target="_blank" rel="noopener">源码</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>企业原有英文站缺内容更新的入口：博客只有列表、没有详情页，新品和技术文章发不出去，海外客户搜关键词进不来。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>在既有模板上新增<b>博客模块</b>——列表页重排，加 5 篇技术文章详情页（选型指南、减速机选型、齿轮模数、行业趋势、联轴节），统一版式与配图，接好导航与文章互链。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>沿用站点原有的 Bootstrap + GSAP（ScrollTrigger、SplitText）滚动动效体系，<b>不引入新框架</b>，保证新旧页面风格一致；每篇文章单独写 title 与 description，配图按原始比例裁切。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd>已上线并绑定独立域名，<b>14 个内容页面</b>（9 个主页面 + 5 篇博客）；现在访问 gtit.cc 返回 200。</dd></div>
+        </dl>
+      </article>
+
+      <article class="pj reveal">
+        <div>
+          <span class="pj-id">02</span>
+          <h3>HB Digital · 本站</h3>
+          <p class="line">没有服务器，也要有完整的提交流程</p>
+          <p class="pj-tech">HTML · CSS · JavaScript · GitHub Actions<br>GitHub REST API · Three.js</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">源码</a>
+            <a class="btn btn-outline btn-sm" href="lab.html">3D 实验页</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>想要一个零成本、能长期维护的个人站，但没有服务器，也不想为了一个反馈表单去买后端。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>纯静态页面 + 把 <b>GitHub Issues 当数据层</b>：Issue Forms 做字段校验，Actions 自动打标、生成统计快照，另写了一个管理台做查询与回复；页面本身从商业站迭代成现在这版作品集。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>写入凭证不落到前端——访客只能提交 Issues，令牌只存在管理台 sessionStorage，权限收窄到 Issues 读写；另有一套 Three.js 粒子 + Bloom 的 3D 实验页单独归档在 <a href="lab.html">lab.html</a>。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd>线上运行、每次提交自动构建；反馈链路（提交 → 自动打标回执 → 统计快照 → 展示）已完整跑通。</dd></div>
+        </dl>
+      </article>
+
+      <p class="group-label reveal">技术项目 <em>· 源码可跑、有 CI</em></p>
+
+      <article class="pj reveal">
+        <div>
+          <span class="pj-id">03</span>
           <h3>InsightAgent</h3>
           <p class="line">用中文提问，直接拿到数据结果</p>
           <p class="pj-tech">Python · Pandas · SQLite · Pydantic<br>Matplotlib · Streamlit · Pytest</p>
@@ -363,7 +411,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
 
       <article class="pj reveal">
         <div>
-          <span class="pj-id">02</span>
+          <span class="pj-id">04</span>
           <h3>CodeFix-Agent</h3>
           <p class="line">找出 Python 里那几类总被忽略的错，并改掉</p>
           <p class="pj-tech">Python · AST · Subprocess · Pytest</p>
@@ -382,7 +430,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
 
       <article class="pj reveal">
         <div>
-          <span class="pj-id">03</span>
+          <span class="pj-id">05</span>
           <h3>TestPilot</h3>
           <p class="line">把一句需求拆成一条测试流水线</p>
           <p class="pj-tech">FastAPI · Pydantic · SQLite · Pytest</p>
@@ -396,25 +444,6 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
           <div class="pj-row"><dt>我做了</dt><dd>拆成六层流水线：Planner、Generator、Executor、Collector、Analyzer、Reporter，层与层之间只用数据模型通信。</dd></div>
           <div class="pj-row"><dt>核心实现</dt><dd>执行层抽象成 MockExecutor，<b>换掉它不影响其余五层</b>——这是我在这项目里最想验证的设计。</dd></div>
           <div class="pj-row pj-result"><dt>结果</dt><dd><b>23 个用例</b>验证六层之间的数据传递。真实浏览器执行与 LLM 用例生成属于后续计划，<span class="pj-note">当前未接入</span></dd></div>
-        </dl>
-      </article>
-
-      <article class="pj reveal">
-        <div>
-          <span class="pj-id">04</span>
-          <h3>HB Digital</h3>
-          <p class="line">没有服务器，也要有完整的提交流程</p>
-          <p class="pj-tech">HTML · CSS · JavaScript · GitHub Actions<br>GitHub REST API · Three.js</p>
-          <div class="pj-links">
-            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">源码</a>
-            <a class="btn btn-outline btn-sm" href="lab.html">3D 实验页</a>
-          </div>
-        </div>
-        <dl class="pj-body">
-          <div class="pj-row"><dt>问题</dt><dd>想要一个零成本、能长期维护的个人站，但没有服务器，也不想为了一个表单去买后端。</dd></div>
-          <div class="pj-row"><dt>我做了</dt><dd>纯静态页面 + 把 GitHub Issues 当数据层：Issue Forms 做字段校验，Actions 自动打标、生成统计快照，另写了一个管理台做查询与回复。</dd></div>
-          <div class="pj-row"><dt>核心实现</dt><dd>写入凭证不落到前端——访客只能提交 Issues，令牌只存在管理台 sessionStorage，权限收窄到 Issues 读写。</dd></div>
-          <div class="pj-row pj-result"><dt>结果</dt><dd>线上运行，每次提交自动构建；另有 <a href="lab.html">3D 实验页</a>，用 Three.js 粒子网络 + Bloom 辉光做视觉实验。</dd></div>
         </dl>
       </article>
 
@@ -477,8 +506,8 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
       <div class="tl">
         <div class="when">2026</div>
         <div>
-          <h3>GTIT 企业官网内容维护 <span class="where">· 企业项目</span></h3>
-          <p>按既有页面模板新增博客详情页，完成内容录入与正文排版，同步更新列表页展示与跳转链接；线上可访问（gtit.cc）。技术栈：HTML、CSS、JavaScript、GitHub Pages。</p>
+          <h3>GTIT 企业官网 <span class="where">· 企业项目</span></h3>
+          <p>宁波一家齿轮减速机出口企业的英文站（gtit.cc），负责内容更新与博客模块。技术细节写在<a href="#projects">项目 01</a>。</p>
         </div>
       </div>
       <div class="tl">
@@ -522,6 +551,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
       <div class="row"><span class="label">姓名</span><span class="value">贵浩滨</span></div>
       <div class="row"><span class="label">求职方向</span><span class="value">Python 开发 / 数据分析 / 测试开发 · 实习</span></div>
       <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com<button class="copy-btn" id="copyEmail">复制</button></span></div>
+      <div class="row"><span class="label">电话</span><span class="value">186-3208-1681<button class="copy-btn" id="copyTel">复制</button></span></div>
       <div class="row"><span class="label">QQ</span><span class="value">2195154945<button class="copy-btn" id="copyQQ">复制</button></span></div>
       <div class="row"><span class="label">GitHub</span><span class="value"><a href="https://github.com/ghb-onb" target="_blank" rel="noopener">github.com/ghb-onb</a></span></div>
       <div class="row"><span class="label">简历</span><span class="value"><a href="resume.pdf" download>resume.pdf</a></span></div>
@@ -621,6 +651,8 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
   if(copyBtn){
     copyBtn.addEventListener('click', function(){ copy('2195154945@qq.com', this, '复制'); });
   }
+  var telBtn = document.getElementById('copyTel');
+  if(telBtn){ telBtn.addEventListener('click', function(){ copy('18632081681', this, '复制'); }); }
 })();
 </script>
 
