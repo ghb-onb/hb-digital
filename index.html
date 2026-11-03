@@ -158,6 +158,13 @@ h1{
   font-variant-numeric:tabular-nums;
 }
 .pj-links{display:flex;flex-wrap:wrap;gap:10px}
+.pj-shot{
+  display:block;margin:20px 0 0;border-radius:12px;overflow:hidden;
+  border:1px solid var(--hair);background:#fff;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+}
+.pj-shot img{display:block;width:100%;height:auto}
+.pj-shot:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.1)}
 .pj-body{display:grid;gap:14px;align-content:start}
 .pj-row{display:grid;grid-template-columns:74px minmax(0,1fr);gap:14px;align-items:start}
 .pj-row dt{font-size:13px;color:var(--ink-3);letter-spacing:0;padding-top:1px}
@@ -360,6 +367,9 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
             <a class="btn btn-outline btn-sm" href="https://gtit.cc" target="_blank" rel="noopener">gtit.cc ↗</a>
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/my-website" target="_blank" rel="noopener">源码</a>
           </div>
+          <a class="pj-shot" href="https://gtit.cc" target="_blank" rel="noopener" aria-label="打开 GTIT 企业官网">
+            <img src="assets/shot-gtit.jpg" alt="GTIT 企业官网首屏：Precision Planetary Gearboxes &amp; Robot Joint Modules" loading="lazy">
+          </a>
         </div>
         <dl class="pj-body">
           <div class="pj-row"><dt>问题</dt><dd>企业原有英文站缺内容更新的入口：博客只有列表、没有详情页，新品和技术文章发不出去，海外客户搜关键词进不来。</dd></div>
@@ -379,6 +389,9 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">源码</a>
             <a class="btn btn-outline btn-sm" href="lab.html">3D 实验页</a>
           </div>
+          <a class="pj-shot" href="https://ghb-onb.github.io/hb-digital/" aria-label="本站就是案例本身">
+            <img src="assets/shot-hb.jpg" alt="HB Digital 本站首屏" loading="lazy">
+          </a>
         </div>
         <dl class="pj-body">
           <div class="pj-row"><dt>问题</dt><dd>想要一个零成本、能长期维护的个人站，但没有服务器，也不想为了一个反馈表单去买后端。</dd></div>
