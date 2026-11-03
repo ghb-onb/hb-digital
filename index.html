@@ -3,9 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HB Digital | 用 Python 帮你解决麻烦</title>
-<meta name="description" content="HB Digital 由贵浩滨创立，用 Python 与 Power BI 帮个人和小团队解决数据处理、办公自动化、小工具开发与可视化问题。">
+<title>贵浩滨 | Python Developer</title>
+<meta name="description" content="贵浩滨，河北工程大学信息与计算科学 2026 届，寻找 Python 开发 / 数据分析 / 测试开发方向实习。三个 Python 项目累计 78 个测试用例，CI 全部通过。">
 <meta name="theme-color" content="#ffffff">
+<meta property="og:title" content="贵浩滨 | Python Developer">
+<meta property="og:description" content="河北工程大学 · 信息与计算科学 · 2026 届。三个 Python 项目，78 个测试用例，CI 全绿。">
+<meta property="og:type" content="profile">
 <style>
 :root{
   --bg:#ffffff;
@@ -16,7 +19,6 @@
   --accent:#0071e3;
   --accent-hover:#0077ed;
   --dark:#000000;
-  --dark-surface:#1d1d1f;
   --dark-ink:#f5f5f7;
   --dark-ink-2:#a1a1a6;
   --hair:rgba(0,0,0,.10);
@@ -24,7 +26,7 @@
   --radius:18px;
   --nav-h:48px;
   --ease:cubic-bezier(.2,0,0,1);
-  --maxw:1080px;
+  --maxw:1000px;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
@@ -46,14 +48,14 @@ section{scroll-margin-top:calc(var(--nav-h) + 12px)}
   background:rgba(251,251,253,.82);
   -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
   border-bottom:1px solid var(--hair);
-  transition:background .3s var(--ease);
 }
 #nav .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.brand{font-size:16px;font-weight:600;letter-spacing:-.015em;color:var(--ink);display:flex;align-items:center;gap:8px}
+.brand{font-size:15px;font-weight:600;letter-spacing:-.015em;color:var(--ink);display:flex;align-items:center;gap:8px}
 .brand:hover{text-decoration:none}
 .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
-#nav nav{display:flex;align-items:center;gap:30px}
-#nav nav a{font-size:12.5px;color:var(--ink);opacity:.86;letter-spacing:0}
+.brand .who{color:var(--ink-3);font-weight:400}
+#nav nav{display:flex;align-items:center;gap:28px}
+#nav nav a{font-size:12.5px;color:var(--ink);opacity:.86}
 #nav nav a:hover{opacity:1;text-decoration:none}
 #nav nav a.lab{color:var(--accent);opacity:1}
 #burger{display:none;width:40px;height:40px;margin-right:-8px;border:0;background:none;padding:0;cursor:pointer}
@@ -64,130 +66,151 @@ section{scroll-margin-top:calc(var(--nav-h) + 12px)}
 #drawer{
   position:fixed;top:var(--nav-h);left:0;right:0;z-index:49;
   background:rgba(251,251,253,.97);
-  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
   border-bottom:1px solid var(--hair);
   padding:8px 22px 22px;display:none;
 }
-#drawer.open{display:block;animation:drop .32s var(--ease)}
-@keyframes drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-#drawer a{display:block;padding:14px 0;font-size:19px;color:var(--ink);border-bottom:1px solid var(--hair)}
+#drawer.open{display:block}
+#drawer a{display:block;padding:13px 0;font-size:17px;color:var(--ink);border-bottom:1px solid var(--hair)}
 #drawer a:last-child{border-bottom:0}
 
-/* ---------- 首屏 ---------- */
-.hero{
-  padding:calc(var(--nav-h) + clamp(72px,11vw,132px)) 0 clamp(64px,9vw,110px);
-  text-align:center;
-}
-.eyebrow{
-  font-size:14px;color:var(--ink-2);letter-spacing:.01em;margin:0 0 18px;
-}
-h1{
-  margin:0;font-size:clamp(42px,7.4vw,80px);line-height:1.12;
-  font-weight:600;letter-spacing:-.018em;
-}
-.hero p.lede{
-  max-width:660px;margin:26px auto 0;color:var(--ink-2);
-  font-size:clamp(17px,2vw,21px);line-height:1.48;
-}
-.actions{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+/* ---------- 通用 ---------- */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  height:44px;padding:0 24px;border-radius:980px;
-  font-size:17px;letter-spacing:-.01em;white-space:nowrap;
+  height:44px;padding:0 24px;border-radius:980px;border:0;
+  font-family:inherit;font-size:16px;letter-spacing:-.01em;white-space:nowrap;cursor:pointer;
   transition:background .22s var(--ease),color .22s var(--ease),border-color .22s var(--ease),transform .18s var(--ease);
 }
 .btn:hover{text-decoration:none}
 .btn:active{transform:scale(.975)}
 .btn-fill{background:var(--accent);color:#fff}
 .btn-fill:hover{background:var(--accent-hover)}
-.btn-link{color:var(--accent);padding:0 4px;height:44px}
-.btn-link:hover{text-decoration:underline}
 .btn-outline{border:1px solid rgba(0,0,0,.18);color:var(--ink);background:transparent}
 .btn-outline:hover{background:rgba(0,0,0,.04)}
+.btn-sm{height:38px;padding:0 18px;font-size:14px}
 
-/* ---------- 通用区块 ---------- */
-.sec{padding:clamp(72px,10vw,132px) 0}
+.sec{padding:clamp(72px,9vw,120px) 0}
 .sec.surface{background:var(--surface)}
 .sec.dark{background:var(--dark);color:var(--dark-ink)}
-.sec-head{max-width:760px;margin:0 auto clamp(40px,6vw,66px);text-align:center}
-h2{
-  margin:0;font-size:clamp(28px,4.6vw,48px);line-height:1.08;
-  font-weight:600;letter-spacing:-.014em;
+.sec-head{max-width:720px;margin:0 0 clamp(38px,5vw,56px)}
+.sec-head .eyebrow{
+  display:block;margin:0 0 12px;font-size:13px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);
 }
-.sec-head p{margin:18px 0 0;color:var(--ink-2);font-size:clamp(16px,1.8vw,19px)}
+.sec.dark .sec-head .eyebrow{color:var(--dark-ink-2)}
+h2{
+  margin:0 0 14px;font-size:clamp(30px,4.4vw,46px);line-height:1.14;
+  font-weight:600;letter-spacing:-.022em;
+}
+.sec-head p{margin:0;color:var(--ink-2);font-size:clamp(16px,1.5vw,18px);line-height:1.55}
 .sec.dark .sec-head p{color:var(--dark-ink-2)}
 
-/* ---------- 服务瓦片 ---------- */
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tile{
-  background:var(--surface);border-radius:var(--radius);
-  padding:clamp(26px,3.4vw,42px);
-  display:flex;flex-direction:column;gap:14px;
-  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+/* ---------- 首屏 ---------- */
+#top{padding:calc(var(--nav-h) + clamp(56px,8vw,96px)) 0 clamp(64px,8vw,96px)}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 22px;
+  padding:6px 14px;border-radius:980px;background:rgba(0,113,227,.08);
+  font-size:13px;font-weight:500;color:var(--accent);letter-spacing:0;
 }
-.sec.surface .tile{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-.tile:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.07)}
-.tile .ico{color:var(--ink)}
-.tile-cta{background:var(--ink)!important;color:#fff;box-shadow:none!important}
-.tile-cta .ico{color:#fff}
-.tile-cta p{color:#a1a1a6}
-.tile-cta .more{color:#2997ff}
-.tile h3{margin:0;font-size:clamp(19px,2vw,24px);font-weight:600;letter-spacing:-.012em}
-.tile p{margin:0;color:var(--ink-2);font-size:16px;line-height:1.5}
-.tile .more{margin-top:auto;font-size:15px;color:var(--accent)}
-.tile .more:hover{text-decoration:underline}
-
-/* ---------- 关于 ---------- */
-.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(28px,5vw,72px);align-items:start}
-.two-col .body p{margin:0 0 18px;color:var(--ink-2);font-size:18px;line-height:1.55}
-.two-col .body p:last-child{margin-bottom:0}
-.two-col .body strong{color:var(--ink);font-weight:600}
-
-/* ---------- 架构（深色） ---------- */
-.layers{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
-.layer{
-  background:var(--dark-surface);border-radius:var(--radius);
-  padding:clamp(24px,3vw,36px);
+.hero-eyebrow .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+h1{
+  margin:0 0 12px;font-size:clamp(46px,9vw,88px);line-height:1.06;
+  font-weight:600;letter-spacing:-.028em;
 }
-.layer .n{font-size:12.5px;color:var(--dark-ink-2);letter-spacing:.06em;margin-bottom:12px}
-.layer h3{margin:0 0 10px;font-size:20px;font-weight:600;color:var(--dark-ink)}
-.layer p{margin:0;color:var(--dark-ink-2);font-size:15px;line-height:1.55}
-.layer .tech{margin-top:16px;font-size:12.5px;color:var(--accent);letter-spacing:.01em}
-
-.dash{
-  margin-top:24px;border-radius:var(--radius);background:var(--dark-surface);
-  display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;
+.hero-role{
+  margin:0 0 10px;font-size:clamp(20px,2.6vw,27px);font-weight:500;
+  color:var(--ink-2);letter-spacing:-.014em;
 }
-.dash .cell{padding:clamp(24px,3.4vw,40px) 20px;text-align:center}
-.dash .cell + .cell{border-left:1px solid var(--hair-dark)}
-.dash .v{font-size:clamp(34px,4.6vw,52px);font-weight:600;letter-spacing:-.02em;line-height:1;color:var(--dark-ink)}
-.dash .k{margin-top:10px;font-size:13.5px;color:var(--dark-ink-2)}
-.dash-foot{margin:22px 0 0;text-align:center;font-size:14px;color:var(--dark-ink-2)}
-.dash-foot a{color:var(--accent)}
+.hero-meta{margin:0 0 26px;font-size:15px;color:var(--ink-3);letter-spacing:0}
+.hero-ask{
+  margin:0 0 30px;max-width:620px;font-size:clamp(16px,1.6vw,18px);
+  line-height:1.6;color:var(--ink-2);
+}
+.hero-ask b{color:var(--ink);font-weight:600}
+.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:34px 0 0;padding:0;list-style:none}
+.tags li{
+  padding:6px 13px;border-radius:980px;border:1px solid var(--hair);
+  font-size:13px;color:var(--ink-2);letter-spacing:0;
+}
 
-/* ---------- 创始人 ---------- */
-.founder{display:grid;grid-template-columns:180px minmax(0,1fr);gap:clamp(24px,4vw,52px);align-items:center;max-width:820px;margin:0 auto}
-.founder img{width:180px;height:180px;object-fit:cover;border-radius:26px}
-.founder h3{margin:0 0 6px;font-size:24px;font-weight:600}
-.founder .role{margin:0 0 18px;font-size:15px;color:var(--ink-3)}
-.founder p{margin:0;color:var(--ink-2);font-size:17px;line-height:1.6}
+/* ---------- 项目 ---------- */
+.projects{display:grid;gap:18px}
+.pj{
+  background:var(--bg);border:1px solid var(--hair);border-radius:var(--radius);
+  padding:clamp(24px,3.4vw,38px);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:clamp(24px,4vw,52px);
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease);
+}
+.pj:hover{border-color:rgba(0,0,0,.2);box-shadow:0 14px 40px rgba(0,0,0,.06)}
+.pj-id{font-size:12.5px;font-weight:600;letter-spacing:.08em;color:var(--ink-3);display:block;margin-bottom:10px}
+.pj h3{margin:0 0 8px;font-size:clamp(21px,2.4vw,25px);font-weight:600;letter-spacing:-.018em}
+.pj .line{margin:0 0 18px;font-size:15px;color:var(--ink-2);line-height:1.5}
+.pj-tech{
+  margin:0 0 18px;font-size:12.5px;line-height:1.7;color:var(--ink-3);letter-spacing:0;
+  font-variant-numeric:tabular-nums;
+}
+.pj-links{display:flex;flex-wrap:wrap;gap:10px}
+.pj-body{display:grid;gap:14px;align-content:start}
+.pj-row{display:grid;grid-template-columns:74px minmax(0,1fr);gap:14px;align-items:start}
+.pj-row dt{font-size:13px;color:var(--ink-3);letter-spacing:0;padding-top:1px}
+.pj-row dd{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink)}
+.pj-row dd b{font-weight:600;color:var(--ink)}
+.pj-result dd{color:var(--ink)}
+.pj-note{
+  display:inline-block;margin-top:2px;padding:2px 9px;border-radius:6px;
+  background:rgba(0,0,0,.05);font-size:12.5px;color:var(--ink-2);
+}
+
+/* ---------- 能力（深色） ---------- */
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair-dark);border:1px solid var(--hair-dark);border-radius:var(--radius);overflow:hidden}
+.skill{background:#0a0a0c;padding:clamp(24px,3vw,34px)}
+.skill h3{margin:0 0 14px;font-size:17px;font-weight:600;color:var(--dark-ink);letter-spacing:-.01em}
+.skill ul{margin:0;padding:0;list-style:none;display:grid;gap:11px}
+.skill li{
+  position:relative;padding-left:16px;font-size:14px;line-height:1.6;color:var(--dark-ink-2);
+}
+.skill li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.skill li b{color:var(--dark-ink);font-weight:600}
+.skill .ev{
+  display:block;margin-top:20px;padding-top:16px;border-top:1px solid var(--hair-dark);
+  font-size:12.5px;line-height:1.65;color:#6e6e73;
+}
+
+/* ---------- 经历 ---------- */
+.timeline{display:grid;gap:0;border-top:1px solid var(--hair)}
+.tl{
+  display:grid;grid-template-columns:132px minmax(0,1fr);gap:clamp(16px,3vw,32px);
+  padding:26px 0;border-bottom:1px solid var(--hair);
+}
+.tl:last-child{border-bottom:0}
+.tl .when{font-size:13px;color:var(--ink-3);letter-spacing:0;padding-top:3px;font-variant-numeric:tabular-nums}
+.tl h3{margin:0 0 6px;font-size:17px;font-weight:600;letter-spacing:-.012em}
+.tl p{margin:0;font-size:14.5px;line-height:1.62;color:var(--ink-2)}
+.tl .where{color:var(--ink-3);font-weight:400;font-size:14px}
 
 /* ---------- 联系 ---------- */
-.cta-final{text-align:center;max-width:720px;margin:0 auto}
-.cta-final h2{margin-bottom:18px}
-.cta-final p.lede{margin:0 0 30px;color:var(--ink-2);font-size:18px;line-height:1.55}
-.cta-final .note{margin:26px auto 0;max-width:600px;font-size:13.5px;color:var(--ink-3);line-height:1.6}
-.contact-rows{max-width:720px;margin:clamp(48px,6vw,72px) auto 0;border-top:1px solid var(--hair)}
-.contact-rows .row{display:flex;justify-content:space-between;gap:24px;padding:18px 2px;border-bottom:1px solid var(--hair);font-size:15px}
+#contact .box{max-width:720px;margin:0 auto;text-align:center}
+#contact h2{margin-bottom:14px}
+#contact .lede{margin:0 0 30px;font-size:clamp(16px,1.7vw,18px);color:var(--ink-2);line-height:1.55}
+#contact .actions{justify-content:center}
+.contact-rows{max-width:720px;margin:clamp(44px,6vw,64px) auto 0;border-top:1px solid var(--hair);text-align:left}
+.contact-rows .row{display:flex;justify-content:space-between;gap:24px;padding:17px 2px;border-bottom:1px solid var(--hair);font-size:15px}
 .contact-rows .label{color:var(--ink-3);flex:none}
 .contact-rows .value{color:var(--ink);text-align:right}
 .copy-btn{
   margin-left:8px;border:1px solid rgba(0,0,0,.16);background:none;color:var(--ink-2);
   border-radius:980px;padding:3px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;
-  transition:background .2s var(--ease),color .2s var(--ease);
+  transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease);
 }
 .copy-btn:hover{background:rgba(0,0,0,.05);color:var(--ink)}
 .copy-btn[data-done="1"]{color:var(--accent);border-color:rgba(0,113,227,.4)}
+
+/* ---------- 页脚 ---------- */
+footer{background:var(--surface);padding:38px 0 46px;font-size:12.5px;color:var(--ink-3)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between}
+footer a{color:var(--ink-2)}
+footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
 
 /* ---------- 加 QQ 弹窗 ---------- */
 #qqModal{
@@ -223,41 +246,34 @@ h2{
 }
 #qqClose:hover{background:rgba(0,0,0,.1);color:var(--ink)}
 
-/* ---------- 页脚 ---------- */
-footer{background:var(--surface);padding:40px 0 48px;font-size:12.5px;color:var(--ink-3)}
-footer .wrap{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:space-between}
-footer a{color:var(--ink-2)}
-footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
-footer .slogan{color:var(--ink-2)}
-
 /* ---------- 入场动效 ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.in{opacity:1;transform:none}
-
-/* ---------- 响应式 ---------- */
-@media(max-width:900px){
-  .tiles{grid-template-columns:repeat(2,1fr)}
-  .layers{grid-template-columns:1fr}
-  .dash{grid-template-columns:repeat(2,1fr)}
-  .dash .cell:nth-child(3){border-left:0}
-  .dash .cell:nth-child(n+3){border-top:1px solid var(--hair-dark)}
-  .two-col{grid-template-columns:1fr;gap:20px}
-}
-@media(max-width:734px){
-  #nav nav{display:none}
-  #burger{display:block}
-  .tiles{grid-template-columns:1fr}
-  .founder{grid-template-columns:1fr;text-align:left;gap:20px}
-  .founder img{width:120px;height:120px;border-radius:20px}
-  .contact-rows .row{flex-direction:column;gap:4px}
-  .contact-rows .value{text-align:left}
-  footer .wrap{flex-direction:column;align-items:flex-start;gap:14px}
-}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .reveal{opacity:1;transform:none;transition:none}
-  .tile:hover{transform:none}
-  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:900px){
+  #nav nav{display:none}
+  #burger{display:block}
+  .pj{grid-template-columns:1fr;gap:22px}
+  .skills{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr;gap:6px}
+}
+@media(max-width:600px){
+  body{font-size:16px}
+  .pj-row{grid-template-columns:1fr;gap:4px}
+  .contact-rows .row{flex-direction:column;gap:4px}
+  .contact-rows .value{text-align:left}
+  .hero-ask{font-size:15.5px}
+  .tags li{font-size:12px}
+}
+@media(max-width:420px){
+  .hero-eyebrow{font-size:12px}
+  .qq-panel{padding:32px 20px 22px}
+  .qq-num{font-size:26px}
 }
 </style>
 </head>
@@ -265,336 +281,266 @@ footer .slogan{color:var(--ink-2)}
 
 <header id="nav">
   <div class="wrap">
-    <a class="brand" href="#top"><span class="dot"></span>HB Digital</a>
+    <a class="brand" href="#top"><span class="dot"></span>HB Digital <span class="who">/ 贵浩滨</span></a>
     <nav>
-      <a href="#services">服务</a>
-      <a href="#about">关于</a>
-      <a href="#stack">架构</a>
-      <a href="#founder">创始人</a>
+      <a href="#projects">项目</a>
+      <a href="#skills">能力</a>
+      <a href="#experience">经历</a>
       <a href="#contact">联系</a>
       <a class="lab" href="lab.html">3D 实验</a>
     </nav>
-    <button id="burger" aria-label="菜单" aria-expanded="false">
+    <button id="burger" aria-label="菜单" aria-expanded="false" aria-controls="drawer">
       <span></span><span></span><span></span>
     </button>
   </div>
 </header>
 
 <div id="drawer">
-  <a href="#services">服务</a>
-  <a href="#about">关于</a>
-  <a href="#stack">架构</a>
-  <a href="#founder">创始人</a>
+  <a href="#projects">项目</a>
+  <a href="#skills">能力</a>
+  <a href="#experience">经历</a>
   <a href="#contact">联系</a>
-  <a href="lab.html">3D 实验</a>
+  <a href="lab.html" style="color:#0071e3">3D 实验</a>
 </div>
 
-<main id="top">
+<main>
 
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Python · Power BI · 自动化</p>
-      <h1>用 Python<br>帮你解决麻烦</h1>
-      <p class="lede">把重复、繁琐、耗时的活交给代码。数据整理、办公自动化、小工具开发、测试与效率提升，都可以用 Python 落地。</p>
-      <div class="actions">
-        <a class="btn btn-fill" href="#contact">聊聊需求</a>
-        <a class="btn btn-link" href="#services">看看能做什么 ›</a>
-      </div>
+<section id="top">
+  <div class="wrap">
+    <p class="hero-eyebrow reveal"><span class="pulse"></span>求职中 · 2026 届</p>
+    <h1 class="reveal">贵浩滨</h1>
+    <p class="hero-role reveal">Python Developer · Data Analyst</p>
+    <p class="hero-meta reveal">河北工程大学 · 信息与计算科学 · 本科 2026 届</p>
+    <p class="hero-ask reveal">
+      找 <b>Python 开发 / 数据分析 / 测试开发</b> 方向的实习。
+      独立完成三个 Python 项目，累计 <b>78 个测试用例</b>，GitHub Actions 全部通过。
+    </p>
+    <div class="actions reveal">
+      <a class="btn btn-fill" href="#projects">查看项目</a>
+      <a class="btn btn-outline" href="resume.pdf" download>下载简历 (PDF)</a>
+      <a class="btn btn-outline" href="https://github.com/ghb-onb" target="_blank" rel="noopener">GitHub</a>
     </div>
-  </section>
+    <ul class="tags reveal">
+      <li>Python</li>
+      <li>Pandas</li>
+      <li>FastAPI</li>
+      <li>Pytest</li>
+      <li>SQLite / SQL</li>
+      <li>Power BI</li>
+      <li>Three.js</li>
+    </ul>
+  </div>
+</section>
 
-  <section id="services" class="sec surface">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <h2>服务。按你的问题来选。</h2>
-        <p>不讲概念，只解决具体那件事：那份每月都要手工填的表，那堆对不上的数据，那个总是忘记的流程。</p>
-      </div>
-      <div class="tiles">
-        <div class="tile reveal">
-          <div class="ico">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
-          </div>
-          <h3>办公自动化</h3>
-          <p>批量处理 Excel / Word / PDF、自动填表、定时任务，把手工活变一键完成。</p>
-          <a class="more" href="#contact">聊聊这个 ›</a>
-        </div>
-        <div class="tile reveal">
-          <div class="ico">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7"/><rect x="12" y="7" width="3" height="11"/><rect x="17" y="13" width="3" height="5"/></svg>
-          </div>
-          <h3>数据处理与分析</h3>
-          <p>清洗、整理、可视化你的数据，用图表和报表把结论说清楚。</p>
-          <a class="more" href="#contact">聊聊这个 ›</a>
-        </div>
-        <div class="tile reveal">
-          <div class="ico">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
-          </div>
-          <h3>小工具 / 网页开发</h3>
-          <p>把你的需求做成一个能用的小程序或网页，随用随取、随手解决问题。</p>
-          <a class="more" href="#contact">聊聊这个 ›</a>
-        </div>
-        <div class="tile reveal">
-          <div class="ico">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3 8-8"/><path d="M21 12v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h9"/></svg>
-          </div>
-          <h3>测试与效率提升</h3>
-          <p>脚本化测试、接口校验、流程自动化，减少人为出错、提升交付速度。</p>
-          <a class="more" href="#contact">聊聊这个 ›</a>
-        </div>
-        <div class="tile reveal">
-          <div class="ico">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="6" width="3" height="12" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg>
-          </div>
-          <h3>Power BI 报表可视化</h3>
-          <p>把杂乱数据做成可交互仪表盘，指标一目了然，让汇报和决策更省心。</p>
-          <a class="more" href="#contact">聊聊这个 ›</a>
-        </div>
-        <div class="tile tile-cta reveal">
-          <div class="ico">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 21l1.9-4.8a8.4 8.4 0 1 1 16.1-4.7z"/></svg>
-          </div>
-          <h3>没找到你要的？</h3>
-          <p>把你手头那件「每次都得手动做一遍」的事说清楚，我判断能不能用代码解决。</p>
-          <a class="more" href="#contact">直接问我 ›</a>
-        </div>
-      </div>
+<section id="projects" class="sec surface">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Technical Projects</span>
+      <h2>技术项目</h2>
+      <p>每个项目按同一套顺序写：解决什么问题、我做了什么、核心实现、结果如何。数字都能在仓库里跑出来。</p>
     </div>
-  </section>
 
-  <section id="about" class="sec">
-    <div class="wrap">
-      <div class="two-col">
-        <div class="reveal"><h2>关于<br>HB Digital</h2></div>
-        <div class="body reveal">
-          <p>HB Digital 由贵浩滨创立，专注用 Python 帮个人和小团队解决实际问题。我们相信，很多让人头疼的重复劳动，都能用几十行代码搞定。</p>
-          <p>无论你是学生、职场人、运营还是创业者，只要手头有「不想手动做」的事，都可以交给我们。从 Python 脚本到 Power BI 仪表盘，我们把数据和流程变成省心的工具。</p>
-          <p>我们的使命：<strong>用技术帮每个人把时间花在更重要的事上。</strong></p>
-        </div>
-      </div>
-    </div>
-  </section>
+    <div class="projects">
 
-  <section id="stack" class="sec dark">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <h2>这个网站怎么跑起来的</h2>
-        <p>没有服务器，没有数据库，也没有账单。四层结构全部搭在 GitHub 上。</p>
-      </div>
-
-      <div class="layers">
-        <div class="layer reveal">
-          <div class="n">01 / 展示层</div>
-          <h3>静态前端</h3>
-          <p>无框架的轻量页面，GitHub Pages 免费托管。另有一个 Three.js 实时渲染的 3D 场景，作为独立实验页保留。</p>
-          <div class="tech">HTML · CSS · Three.js</div>
-        </div>
-        <div class="layer reveal">
-          <div class="n">02 / 数据层</div>
-          <h3>Issues 当数据库</h3>
-          <p>本站的公开技术反馈就是一条 Issue，自带标签、时间戳、评论与状态流转，检索分页开箱可用。</p>
-          <div class="tech">GitHub Issues API</div>
-        </div>
-        <div class="layer reveal">
-          <div class="n">03 / 鉴权层</div>
-          <h3>最小权限令牌</h3>
-          <p>管理台只持一个仅能读写本仓库 Issues 的细粒度令牌，存在标签页的 sessionStorage，关页即失效。令牌会随每次管理请求发给 GitHub API 由服务端鉴权，前端不留长期凭证。</p>
-          <div class="tech">Fine-grained PAT · sessionStorage</div>
-        </div>
-        <div class="layer reveal">
-          <div class="n">04 / 计算层</div>
-          <h3>服务端校验 + 双路径聚合</h3>
-          <p>Issue Forms 在提交时校验必填项并自动打标；看板优先读 Actions 聚合出的 stats.json 快照，快照缺失时才匿名读公开 Issues 自行汇总。</p>
-          <div class="tech">Issue Forms · stats.json 快照 · 匿名 API 兜底</div>
-        </div>
-      </div>
-
-      <div class="dash reveal">
-        <div class="cell"><div class="v" id="dTotal">—</div><div class="k">累计反馈</div></div>
-        <div class="cell"><div class="v" id="dPending">—</div><div class="k">待处理</div></div>
-        <div class="cell"><div class="v" id="dClosed">—</div><div class="k">已处理</div></div>
-        <div class="cell"><div class="v" id="dWeek">—</div><div class="k">本周新增</div></div>
-      </div>
-      <p class="dash-foot reveal">
-        数据来自仓库 Issues 的真实聚合，非手工填写 · <a href="admin.html">进入管理后台 ›</a>
-      </p>
-    </div>
-  </section>
-
-  <section id="founder" class="sec">
-    <div class="wrap">
-      <div class="founder reveal">
-        <img src="avatar.jpg" alt="贵浩滨">
+      <article class="pj reveal">
         <div>
-          <h3>贵浩滨</h3>
-          <p class="role">Founder &amp; Python Developer</p>
-          <p>河北工程大学 · 信息与计算科学专业。擅长 Python 自动化、数据分析、Power BI 可视化与测试开发。希望用代码帮更多人从重复劳动里解放出来。</p>
+          <span class="pj-id">01</span>
+          <h3>InsightAgent</h3>
+          <p class="line">用中文提问，直接拿到数据结果</p>
+          <p class="pj-tech">Python · Pandas · SQLite · Pydantic<br>Matplotlib · Streamlit · Pytest</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/InsightAgent" target="_blank" rel="noopener">源码</a>
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/InsightAgent/actions" target="_blank" rel="noopener">CI 记录</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>不会写 SQL 的人想查数据，只能等会写的人帮忙，来回一轮就是半天。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>设计并实现「规则解析 → SQL 生成 → 只读执行 → 可视化」四段流程，从解析到界面全部自己写。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>不用大模型的规则解析 + 固定 SQL 模板，结果可复现、零 token 成本；执行层用只读连接，加<b>表白名单、超时、行数上限</b>四道约束。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd><b>44 个 pytest 用例</b>全部通过，覆盖列映射、动态 schema 等边界场景；CI 每次提交自动跑。</dd></div>
+        </dl>
+      </article>
+
+      <article class="pj reveal">
+        <div>
+          <span class="pj-id">02</span>
+          <h3>CodeFix-Agent</h3>
+          <p class="line">找出 Python 里那几类总被忽略的错，并改掉</p>
+          <p class="pj-tech">Python · AST · Subprocess · Pytest</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/CodeFix-Agent" target="_blank" rel="noopener">源码</a>
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/CodeFix-Agent/actions" target="_blank" rel="noopener">CI 记录</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>代码评审里同类问题反复出现——折扣算反、可变默认参数、浮点直接比较、裸 except，人眼容易漏。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>用 AST 写静态分析，实现 4 条检测规则（CF001–CF004），并为其中能自动修的写出修复逻辑。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>改写 AST 节点后重新 <code>ast.parse</code> 校验语法；再用子进程隔离跑 pytest，修完必须真跑通才算数。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd>演示样例输出「<b>修前 0/4 → 修后 4/4</b>」；<b>11 个用例</b>覆盖检测、修复、验证三段链路。</dd></div>
+        </dl>
+      </article>
+
+      <article class="pj reveal">
+        <div>
+          <span class="pj-id">03</span>
+          <h3>TestPilot</h3>
+          <p class="line">把一句需求拆成一条测试流水线</p>
+          <p class="pj-tech">FastAPI · Pydantic · SQLite · Pytest</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/TestPilot" target="_blank" rel="noopener">源码</a>
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/TestPilot/actions" target="_blank" rel="noopener">CI 记录</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>接口测试用例靠手写，同样的结构重复很多遍，还容易漏场景。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>拆成六层流水线：Planner、Generator、Executor、Collector、Analyzer、Reporter，层与层之间只用数据模型通信。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>执行层抽象成 MockExecutor，<b>换掉它不影响其余五层</b>——这是我在这项目里最想验证的设计。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd><b>23 个用例</b>验证六层之间的数据传递。真实浏览器执行与 LLM 用例生成属于后续计划，<span class="pj-note">当前未接入</span></dd></div>
+        </dl>
+      </article>
+
+      <article class="pj reveal">
+        <div>
+          <span class="pj-id">04</span>
+          <h3>HB Digital</h3>
+          <p class="line">没有服务器，也要有完整的提交流程</p>
+          <p class="pj-tech">HTML · CSS · JavaScript · GitHub Actions<br>GitHub REST API · Three.js</p>
+          <div class="pj-links">
+            <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">源码</a>
+            <a class="btn btn-outline btn-sm" href="lab.html">3D 实验页</a>
+          </div>
+        </div>
+        <dl class="pj-body">
+          <div class="pj-row"><dt>问题</dt><dd>想要一个零成本、能长期维护的个人站，但没有服务器，也不想为了一个表单去买后端。</dd></div>
+          <div class="pj-row"><dt>我做了</dt><dd>纯静态页面 + 把 GitHub Issues 当数据层：Issue Forms 做字段校验，Actions 自动打标、生成统计快照，另写了一个管理台做查询与回复。</dd></div>
+          <div class="pj-row"><dt>核心实现</dt><dd>写入凭证不落到前端——访客只能提交 Issues，令牌只存在管理台 sessionStorage，权限收窄到 Issues 读写。</dd></div>
+          <div class="pj-row pj-result"><dt>结果</dt><dd>线上运行，每次提交自动构建；另有 <a href="lab.html">3D 实验页</a>，用 Three.js 粒子网络 + Bloom 辉光做视觉实验。</dd></div>
+        </dl>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="sec dark">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Capabilities</span>
+      <h2>技术能力</h2>
+      <p>不列名词，只列能被点开验证的东西。</p>
+    </div>
+
+    <div class="skills reveal">
+      <div class="skill">
+        <h3>Python 工程</h3>
+        <ul>
+          <li><b>78 个 pytest 用例</b>，三个仓库 CI 全绿</li>
+          <li>AST 改写后重新解析校验语法</li>
+          <li>子进程隔离执行，拿到真实的测试前后对照</li>
+          <li>分层设计：换掉执行层，其余五层不动</li>
+        </ul>
+        <span class="ev">证据：InsightAgent 44 · CodeFix-Agent 11 · TestPilot 23</span>
+      </div>
+      <div class="skill">
+        <h3>数据处理</h3>
+        <ul>
+          <li>Pandas 读写 CSV / Excel，处理列映射与动态 schema</li>
+          <li>Matplotlib 出图，Streamlit 做交互展示</li>
+          <li>SQLite 与 SQL 查询，只读执行 + 结果行数约束</li>
+          <li>Power BI 报表：做过销售与利润分析可视化</li>
+        </ul>
+        <span class="ev">证据：InsightAgent 数据链路、课程与实训报表</span>
+      </div>
+      <div class="skill">
+        <h3>测试与质量</h3>
+        <ul>
+          <li>修复前后对照验证，不靠「看起来对」</li>
+          <li>把安全约束写成代码：白名单、超时、行数上限</li>
+          <li>GitHub Actions 在每次提交上跑测试</li>
+          <li>TestPilot 六层流水线：设计测试流程，不只是写用例</li>
+        </ul>
+        <span class="ev">证据：三个仓库的 Actions 运行记录、TestPilot 六层设计</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="sec">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Background</span>
+      <h2>经历</h2>
+      <p>学校、企业项目、自己接的活，按时间倒序。</p>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl">
+        <div class="when">2026</div>
+        <div>
+          <h3>GTIT 企业官网内容维护 <span class="where">· 企业项目</span></h3>
+          <p>按既有页面模板新增博客详情页，完成内容录入与正文排版，同步更新列表页展示与跳转链接；线上可访问（gtit.cc）。技术栈：HTML、CSS、JavaScript、GitHub Pages。</p>
+        </div>
+      </div>
+      <div class="tl">
+        <div class="when">2024 — 至今</div>
+        <div>
+          <h3>个人技术服务 <span class="where">· 独立接单</span></h3>
+          <p>通过线上渠道获取需求并独立交付：Word 文档排版、Excel 数据整理、数据可视化、视频剪辑、软件本地化部署。从沟通需求到交付验收全部自己负责。</p>
+        </div>
+      </div>
+      <div class="tl">
+        <div class="when">2022.09 — 2026.06</div>
+        <div>
+          <h3>河北工程大学 · 信息与计算科学 <span class="where">· 本科</span></h3>
+          <p>数学与计算机交叉专业。课余自学 Python 工程化与前端，把课程里的数据处理落到实际项目上。</p>
+        </div>
+      </div>
+      <div class="tl">
+        <div class="when">持续</div>
+        <div>
+          <h3>个人技术探索 <span class="where">· 自选课题</span></h3>
+          <p>3D 视觉：Three.js 粒子网络、流星与 Bloom 辉光的性能取舍；桌面自动化：用 ctypes 调 user32.dll 做 Windows GUI 操作，绕开第三方库的依赖问题。</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="contact" class="sec surface">
-    <div class="wrap">
-      <div class="cta-final reveal">
-        <h2>有技术需求？直接联系我。</h2>
-        <p class="lede">描述你遇到的问题，我会根据实际需求评估方案。不需要注册任何账号，内容也不会出现在公开页面上。</p>
-        <div class="actions">
-          <button class="btn btn-fill" id="openQQ" type="button">加我 QQ</button>
-          <a class="btn btn-outline" href="mailto:2195154945@qq.com?subject=%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">邮件联系我</a>
-        </div>
-        <p class="note">
-          <b>加 QQ</b> 最快，一两句话就能说清问题；<b>邮件</b>更适合发截图和附件。<br>
-          只是发现本站 Bug？去 <a href="https://github.com/ghb-onb/hb-digital/issues/new?template=feedback.yml" target="_blank" rel="noopener">GitHub 技术反馈（公开）</a>，那里请勿填写手机号、公司资料等敏感信息。
-        </p>
-      </div>
-
-      <div class="contact-rows reveal">
-        <div class="row"><span class="label">品牌</span><span class="value">HB Digital</span></div>
-        <div class="row"><span class="label">创始人</span><span class="value">贵浩滨</span></div>
-        <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com<button class="copy-btn" id="copyEmail">复制</button></span></div>
-        <div class="row"><span class="label">QQ</span><span class="value">2195154945<button class="copy-btn" id="copyQQ">复制</button></span></div>
-        <div class="row"><span class="label">业务方向</span><span class="value">Python &amp; Power BI 技术解决方案 · 自动化 / 数据处理 / 可视化 / 效率工具</span></div>
-        <div class="row"><span class="label">Slogan</span><span class="value">用 Python 把麻烦交给我们</span></div>
+<section id="contact" class="sec surface">
+  <div class="wrap">
+    <div class="box reveal">
+      <h2>聊聊实习机会</h2>
+      <p class="lede">2026 年 6 月毕业，可实习 6 个月以上，接受转正。到岗城市：北京 / 天津 / 邯郸。</p>
+      <div class="actions">
+        <a class="btn btn-fill" href="mailto:2195154945@qq.com?subject=%E5%AE%9E%E4%B9%A0%E6%9C%BA%E4%BC%9A%EF%BC%9A%E8%B4%B5%E6%B5%A9%E6%BB%A8">邮件联系我</a>
+        <button class="btn btn-outline" id="openQQ" type="button">加我 QQ</button>
+        <a class="btn btn-outline" href="resume.pdf" download>下载简历</a>
       </div>
     </div>
-  </section>
+
+    <div class="contact-rows reveal">
+      <div class="row"><span class="label">姓名</span><span class="value">贵浩滨</span></div>
+      <div class="row"><span class="label">求职方向</span><span class="value">Python 开发 / 数据分析 / 测试开发 · 实习</span></div>
+      <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com<button class="copy-btn" id="copyEmail">复制</button></span></div>
+      <div class="row"><span class="label">QQ</span><span class="value">2195154945<button class="copy-btn" id="copyQQ">复制</button></span></div>
+      <div class="row"><span class="label">GitHub</span><span class="value"><a href="https://github.com/ghb-onb" target="_blank" rel="noopener">github.com/ghb-onb</a></span></div>
+      <div class="row"><span class="label">简历</span><span class="value"><a href="resume.pdf" download>resume.pdf</a></span></div>
+    </div>
+  </div>
+</section>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="slogan">HB Digital © 2026 · 用 Python 把麻烦交给我们</div>
+    <div>HB Digital © 2026 · 贵浩滨的个人技术作品集</div>
     <div class="fnav">
       <a href="lab.html">3D 实验</a>
-      <a href="admin.html">管理后台</a>
-      <a href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">源码</a>
+      <a href="https://github.com/ghb-onb/hb-digital" target="_blank" rel="noopener">本站源码</a>
+      <a href="#top">回到顶部</a>
     </div>
   </div>
 </footer>
-
-<script>
-/* 交互：菜单 / 入场 / 复制邮箱 */
-(function(){
-  var burger = document.getElementById('burger');
-  var drawer = document.getElementById('drawer');
-  burger.addEventListener('click', function(){
-    var open = drawer.classList.toggle('open');
-    burger.classList.toggle('on', open);
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  drawer.querySelectorAll('a').forEach(function(a){
-    a.addEventListener('click', function(){
-      drawer.classList.remove('open');
-      burger.classList.remove('on');
-      burger.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-
-  var copyBtn = document.getElementById('copyEmail');
-  if(copyBtn){
-    copyBtn.addEventListener('click', async function(){
-      try{
-        await navigator.clipboard.writeText('2195154945@qq.com');
-        copyBtn.textContent = '已复制';
-        setTimeout(function(){ copyBtn.textContent = '复制'; }, 1500);
-      }catch(err){
-        copyBtn.textContent = '复制失败';
-      }
-    });
-  }
-})();
-</script>
-
-<script>
-/* 数据看板
-   两条路径，互为兜底：
-   1) 优先读 Actions 定时聚合的 stats.json（静态文件，零 API 消耗）
-   2) 快照缺失或 updatedAt 不是合法日期时，匿名读公开 Issues 自行汇总
-      （带 10 分钟本地缓存，避免同一访客反复请求消耗未认证配额）
-
-   快照是否有效只看 updatedAt，不看 total：
-   真实的「0 条反馈」也是有效数据，必须原样展示。
-   两条路径都拿不到数据时显示「—」，不把未知状态伪装成 0。 */
-(function(){
-  var API = 'https://api.github.com/repos/ghb-onb/hb-digital/issues';
-  var LABEL = '反馈';
-  var CACHE_KEY = 'hb_dash_v1';
-  var TTL = 10 * 60 * 1000;
-  var UNKNOWN = '—';
-
-  function set(id, v){
-    var el = document.getElementById(id);
-    if (el) el.textContent = v;
-  }
-  function num(v){
-    return (typeof v === 'number' && isFinite(v)) ? v : UNKNOWN;
-  }
-  function paint(d){
-    set('dTotal',   num(d.total));
-    set('dPending', num(d.pending));
-    set('dClosed',  num(d.closed));
-    set('dWeek',    num(d.week));
-  }
-  function unavailable(){
-    set('dTotal', UNKNOWN);
-    set('dPending', UNKNOWN);
-    set('dClosed', UNKNOWN);
-    set('dWeek', UNKNOWN);
-  }
-
-  /* 有效快照 = 有 updatedAt 且能被解析成真实日期。
-     未生成过（null）或占位值一律视为无效，走实时兜底。 */
-  function hasValidSnapshot(s){
-    if (!s || typeof s !== 'object' || !s.updatedAt) return false;
-    var t = Date.parse(s.updatedAt);
-    return !isNaN(t);
-  }
-
-  function live(){
-    var now = Date.now();
-    try {
-      var c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
-      if (c && now - c.at < TTL) { paint(c.d); return; }
-    } catch (e) { /* 隐私模式下 sessionStorage 不可用，忽略 */ }
-
-    fetch(API + '?labels=' + encodeURIComponent(LABEL) + '&state=all&per_page=100', {
-      headers: { 'Accept': 'application/vnd.github+json' }
-    })
-      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(list){
-        list = (list || []).filter(function(i){ return !i.pull_request; });
-        var d = {
-          total: list.length,
-          closed: list.filter(function(i){ return i.state === 'closed'; }).length,
-          pending: list.filter(function(i){ return i.state !== 'closed'; }).length,
-          week: list.filter(function(i){ return now - new Date(i.created_at).getTime() < 7 * 864e5; }).length
-        };
-        paint(d);
-        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: now, d: d })); } catch (e) {}
-      })
-      .catch(unavailable);
-  }
-
-  fetch('stats.json?t=' + Date.now(), { cache: 'no-store' })
-    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function(s){
-      if (hasValidSnapshot(s)) {
-        paint({ total: s.total, pending: s.open, closed: s.closed, week: s.thisWeek });
-      } else {
-        live();
-      }
-    })
-    .catch(live);
-})();
-</script>
 
 <div id="qqModal" role="dialog" aria-modal="true" aria-labelledby="qqTitle" aria-hidden="true">
   <div class="qq-panel">
@@ -615,11 +561,73 @@ footer .slogan{color:var(--ink-2)}
 </div>
 
 <script>
+/* 菜单 / 入场 / 复制 */
+(function(){
+  var burger = document.getElementById('burger');
+  var drawer = document.getElementById('drawer');
+  burger.addEventListener('click', function(){
+    var open = drawer.classList.toggle('open');
+    burger.classList.toggle('on', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  drawer.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      drawer.classList.remove('open');
+      burger.classList.remove('on');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: .1, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  function copy(text, btn, label){
+    function done(){
+      btn.textContent = '已复制';
+      btn.setAttribute('data-done', '1');
+      setTimeout(function(){ btn.textContent = label; btn.removeAttribute('data-done'); }, 1600);
+    }
+    function fallback(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-1000px';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if(ok){ done(); } else { btn.textContent = '请手动复制'; setTimeout(function(){ btn.textContent = label; }, 1600); }
+      }catch(err){
+        btn.textContent = '请手动复制';
+        setTimeout(function(){ btn.textContent = label; }, 1600);
+      }
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    }else{
+      fallback();
+    }
+  }
+
+  var rowCopy = document.getElementById('copyQQ');
+  if(rowCopy){ rowCopy.addEventListener('click', function(){ copy('2195154945', this, '复制'); }); }
+  var copyBtn = document.getElementById('copyEmail');
+  if(copyBtn){
+    copyBtn.addEventListener('click', function(){ copy('2195154945@qq.com', this, '复制'); });
+  }
+})();
+</script>
+
+<script>
 /* 加 QQ 弹窗
-   不依赖任何服务端：号码直接写在页面上，唤起用 QQ 的 URL Scheme。
-   电脑走 tencent://AddContact，手机走 mqqwpa://im/chat。
-   Schema 唤起不可靠（浏览器/客户端版本都会拦），所以「复制号码」是主路径，
-   唤起只是加速手段——按钮文案和提示都按这个前提写。 */
+   号码写死在页面里，不依赖后端；唤起用 QQ 的 URL Scheme。
+   Scheme 受浏览器与客户端版本影响，所以「复制号码」是主路径。 */
 (function(){
   var QQ = '2195154945';
   var modal = document.getElementById('qqModal');
@@ -659,8 +667,7 @@ footer .slogan{color:var(--ink-2)}
   function copy(text, btn, label){
     function done(){
       btn.textContent = '已复制';
-      btn.setAttribute('data-done', '1');
-      setTimeout(function(){ btn.textContent = label; btn.removeAttribute('data-done'); }, 1600);
+      setTimeout(function(){ btn.textContent = label; }, 1600);
     }
     function fallback(){
       try{
@@ -687,8 +694,6 @@ footer .slogan{color:var(--ink-2)}
   }
 
   document.getElementById('qqCopy').addEventListener('click', function(){ copy(QQ, this, '复制 QQ 号'); });
-  var rowCopy = document.getElementById('copyQQ');
-  if(rowCopy){ rowCopy.addEventListener('click', function(){ copy(QQ, this, '复制'); }); }
 })();
 </script>
 

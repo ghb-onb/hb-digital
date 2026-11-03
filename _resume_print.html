@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>贵浩滨 - 简历</title>
+<style>
+@page{size:A4;margin:10mm 12mm}
+*{box-sizing:border-box}
+body{
+  margin:0;color:#1d1d1f;background:#fff;
+  font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Noto Sans SC",-apple-system,sans-serif;
+  font-size:9.4pt;line-height:1.44;letter-spacing:.01em;
+}
+h1{margin:0 0 1.4mm;font-size:20pt;letter-spacing:-.02em;font-weight:700}
+.role{font-size:10.2pt;color:#3a3a3c;margin:0 0 1mm;font-weight:600}
+.meta{font-size:8.4pt;color:#6e6e73;margin:0 0 .6mm}
+.meta a{color:#0071e3;text-decoration:none}
+.intent{
+  margin:2.2mm 0 0;padding:1.8mm 2.6mm;background:#f5f5f7;border-radius:2mm;
+  font-size:8.8pt;color:#1d1d1f;
+}
+h2{
+  margin:3.6mm 0 1.6mm;padding-bottom:1mm;border-bottom:.35mm solid #1d1d1f;
+  font-size:9.6pt;letter-spacing:.06em;font-weight:700;
+}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:4mm}
+.row .t{font-weight:700;font-size:9.4pt}
+.row .s{font-size:8.2pt;color:#6e6e73;white-space:nowrap}
+.sub{font-size:8.4pt;color:#6e6e73;margin:.4mm 0 .8mm}
+ul{margin:0 0 1.8mm;padding-left:4mm}
+li{margin:.45mm 0;font-size:8.9pt;line-height:1.46}
+li b{font-weight:600}
+.skills p{margin:.5mm 0;font-size:8.9pt}
+.skills b{display:inline-block;min-width:17mm;margin-right:2.4mm}
+code{font-family:Consolas,Monaco,monospace;font-size:8.4pt;background:#f5f5f7;padding:0 .6mm;border-radius:.6mm}
+.foot{margin-top:2.6mm;font-size:7.8pt;color:#86868b;text-align:center}
+</style>
+</head>
+<body>
+
+<h1>贵浩滨</h1>
+<p class="role">Python 开发 / 数据分析 实习生</p>
+<p class="meta">河北工程大学 · 信息与计算科学 · 本科 2026 届</p>
+<p class="meta">2195154945@qq.com · github.com/ghb-onb · ghb-onb.github.io/hb-digital</p>
+
+<p class="intent"><b>求职意向：</b>Python 开发 / 数据分析 / 测试开发方向实习　·　可实习 6 个月以上，接受转正　·　可到岗：北京 / 天津 / 邯郸</p>
+
+<h2>教育背景</h2>
+<div class="row"><span class="t">河北工程大学 · 信息与计算科学（本科）</span><span class="s">2022.09 — 2026.06</span></div>
+<div class="sub">数学与计算机交叉专业，课余自学 Python 工程化与前端开发</div>
+
+<h2>专业技能</h2>
+<div class="skills">
+  <p><b>Python</b>熟悉基础语法、面向对象与标准库；有 AST 代码分析、子进程调用、自动化脚本开发经验</p>
+  <p><b>数据处理</b>Pandas 读写 CSV / Excel、列映射与动态 schema；Matplotlib 可视化；SQLite 与 SQL 查询</p>
+  <p><b>后端</b>FastAPI + Pydantic 构建接口与数据模型，了解 REST API 与基础权限控制</p>
+  <p><b>测试</b>Pytest 单元与集成测试（累计 78 个用例），修复前后对照验证，GitHub Actions CI</p>
+  <p><b>前端与工具</b>HTML / CSS / JavaScript、GitHub Pages、Three.js；Git、GitHub Actions、Streamlit、Power BI</p>
+</div>
+
+<h2>项目经历</h2>
+
+<div class="row"><span class="t">InsightAgent｜自然语言数据查询与可视化</span><span class="s">Python · Pandas · SQLite · Streamlit</span></div>
+<ul>
+  <li>设计「规则解析 → SQL 生成 → 只读执行 → 可视化」四段流程，从解析到交互界面独立实现。</li>
+  <li>采用规则解析与固定 SQL 模板，不依赖大模型，结果可复现且零 token 成本。</li>
+  <li>执行层使用只读连接，并加表白名单、超时、行数上限四道约束。</li>
+  <li>编写 <b>44 个 pytest 用例</b>，覆盖核心流程与列映射、动态 schema 等边界场景。</li>
+</ul>
+
+<div class="row"><span class="t">CodeFix-Agent｜Python 代码静态分析与自动修复</span><span class="s">Python · AST · Subprocess · Pytest</span></div>
+<ul>
+  <li>基于 AST 构建静态分析流程，实现 4 类问题检测（CF001–CF004）：折扣率误用、可变默认参数、裸 <code>except</code>、浮点直接比较。</li>
+  <li>针对折扣计算错误实现自动修复，改写节点后用 <code>ast.parse</code> 重新解析校验语法。</li>
+  <li>通过子进程隔离调用 Pytest 执行修复前后代码，输出「修前 0/4 → 修后 4/4」对照结果。</li>
+  <li>编写 <b>11 个用例</b>，覆盖检测、修复、验证三段链路。</li>
+</ul>
+
+<div class="row"><span class="t">TestPilot｜模块化测试流程原型</span><span class="s">FastAPI · Pydantic · SQLite · Pytest</span></div>
+<ul>
+  <li>把测试任务拆成 Planner、Generator、Executor、Collector、Analyzer、Reporter 六层，层间以数据模型解耦。</li>
+  <li>执行层抽象为 MockExecutor，替换执行层不影响其余五层；真实浏览器执行与 LLM 用例生成列为后续计划，当前未接入。</li>
+  <li>编写 <b>23 个用例</b>，验证六层之间的数据传递与整体链路。</li>
+</ul>
+
+<div class="row"><span class="t">HB Digital｜个人技术站与反馈闭环</span><span class="s">HTML · CSS · JS · GitHub Actions</span></div>
+<ul>
+  <li>纯静态站，以 GitHub Issues 作为数据层：Issue Forms 做字段校验，Actions 自动打标并生成统计快照。</li>
+  <li>写入凭证不落前端，令牌仅存管理台 sessionStorage，权限收窄至 Issues 读写。</li>
+  <li>另有用 Three.js 实现的 3D 实验页（粒子网络、Bloom 辉光）。</li>
+</ul>
+
+<h2>实践经历</h2>
+<div class="row"><span class="t">GTIT｜企业官网内容更新与维护</span><span class="s">2026</span></div>
+<ul>
+  <li>按既有页面模板新增博客详情页，完成内容录入与正文排版，同步更新列表展示与跳转链接；站点线上可访问（gtit.cc）。</li>
+</ul>
+
+<div class="row"><span class="t">个人技术服务｜独立接单</span><span class="s">2024 — 至今</span></div>
+<ul>
+  <li>通过线上渠道获取需求并独立交付：文档排版、Excel 数据整理、数据可视化、视频剪辑、软件本地化部署。</li>
+  <li>独立完成需求沟通、方案选择、交付与验收全流程。</li>
+</ul>
+
+<p class="foot">更多细节与可运行代码：github.com/ghb-onb　|　ghb-onb.github.io/hb-digital</p>
+
+</body>
+</html>
