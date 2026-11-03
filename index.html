@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>贵浩滨 | Python Developer</title>
-<meta name="description" content="贵浩滨，河北工程大学信息与计算科学 2026 届，寻找 Python 开发 / 数据分析 / 测试开发方向实习。三个 Python 项目累计 78 个测试用例，CI 全部通过。">
+<title>贵浩滨 | Python 开发实习生</title>
+<meta name="description" content="贵浩滨，河北工程大学信息与计算科学 2026 届，寻找 Python 开发方向实习。三个 Python 项目累计 78 个测试用例、CI 全部通过，均附真实运行截图。">
 <meta name="theme-color" content="#ffffff">
-<meta property="og:title" content="贵浩滨 | Python Developer">
+<meta property="og:title" content="贵浩滨 | Python 开发实习生">
 <meta property="og:description" content="河北工程大学 · 信息与计算科学 · 2026 届。三个 Python 项目，78 个测试用例，CI 全绿。">
 <meta property="og:type" content="profile">
 <style>
@@ -122,6 +122,7 @@ h1{
   color:var(--ink-2);letter-spacing:-.014em;
 }
 .hero-meta{margin:0 0 26px;font-size:15px;color:var(--ink-3);letter-spacing:0}
+.hero-sub{margin:0 0 8px;font-size:16px;color:var(--ink-2);letter-spacing:0}
 .hero-ask{
   margin:0 0 30px;max-width:620px;font-size:clamp(16px,1.6vw,18px);
   line-height:1.6;color:var(--ink-2);
@@ -152,6 +153,10 @@ h1{
 .pj:hover{border-color:rgba(0,0,0,.2);box-shadow:0 14px 40px rgba(0,0,0,.06)}
 .pj-id{font-size:12.5px;font-weight:600;letter-spacing:.08em;color:var(--ink-3);display:block;margin-bottom:10px}
 .pj h3{margin:0 0 8px;font-size:clamp(21px,2.4vw,25px);font-weight:600;letter-spacing:-.018em}
+.pj-kind{
+  display:inline-block;margin-left:10px;padding:3px 9px;border-radius:6px;vertical-align:middle;
+  background:rgba(0,0,0,.055);font-size:11.5px;font-weight:500;color:var(--ink-2);letter-spacing:.02em;
+}
 .pj .line{margin:0 0 18px;font-size:15px;color:var(--ink-2);line-height:1.5}
 .pj-tech{
   margin:0 0 18px;font-size:12.5px;line-height:1.7;color:var(--ink-3);letter-spacing:0;
@@ -163,7 +168,9 @@ h1{
   border:1px solid var(--hair);background:#fff;
   transition:transform .3s var(--ease),box-shadow .3s var(--ease);
 }
-.pj-shot img{display:block;width:100%;height:auto}
+.pj-shot img{display:block;width:100%;height:auto;max-height:460px;object-fit:contain;background:#fff}
+.pj-shot.dark{background:#12131a;border-color:#23252f}
+.pj-shot.dark img{background:#12131a}
 .pj-shot:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.1)}
 .pj-body{display:grid;gap:14px;align-content:start}
 .pj-row{display:grid;grid-template-columns:74px minmax(0,1fr);gap:14px;align-items:start}
@@ -342,10 +349,11 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
   <div class="wrap">
     <p class="hero-eyebrow reveal"><span class="pulse"></span>求职中 · 2026 届</p>
     <h1 class="reveal">贵浩滨</h1>
-    <p class="hero-role reveal">Python Developer · Data Analyst</p>
+    <p class="hero-role reveal">Python 开发实习生</p>
+    <p class="hero-sub reveal">具备数据处理、自动化测试与 Web 开发实践</p>
     <p class="hero-meta reveal">河北工程大学 · 信息与计算科学 · 本科 2026 届</p>
     <p class="hero-ask reveal">
-      找 <b>Python 开发 / 数据分析 / 测试开发</b> 方向的实习。
+      找 <b>Python 开发</b>方向的实习，数据处理和自动化测试是练得最多的两块。
       三个 Python 项目累计 <b>78 个测试用例</b>、CI 全部通过；另有一个在运营的企业官网（gtit.cc）和一个自建的个人站。
     </p>
     <div class="actions reveal">
@@ -370,16 +378,16 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
     <div class="sec-head reveal">
       <span class="eyebrow">Projects</span>
       <h2>做过的项目</h2>
-      <p>分三组。前两个真上线、能点开；中间三条是别人委托的活，我用工具链做完；最后三个是能跑起来、有 CI 的技术项目。大项目都按同一套顺序写——问题、我做了什么、核心实现、结果，数字都能核实。</p>
+      <p>分三组：两个能点开的上线项目，三个能跑、有 CI 的技术项目（都配真实运行截图），外加三条别人委托的小单。大项目统一按「问题 → 我做了什么 → 核心实现 → 结果」写，数字都能核实。</p>
     </div>
 
     <div class="projects">
-      <p class="group-label reveal">真实交付 <em>· 有域名、能点开、在运营</em></p>
+      <p class="group-label reveal">上线项目 <em>· 都能点开，一个对外交付、一个给自己用</em></p>
 
       <article class="pj reveal">
         <div>
           <span class="pj-id">01</span>
-          <h3>GTIT 企业官网</h3>
+          <h3>GTIT 企业官网 <span class="pj-kind">企业项目</span></h3>
           <p class="line">一家齿轮减速机出口企业的英文站，我负责内容与博客模块</p>
           <p class="pj-tech">HTML · CSS · JavaScript<br>Bootstrap · GSAP · GitHub Pages</p>
           <div class="pj-links">
@@ -391,7 +399,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
           </a>
         </div>
         <dl class="pj-body">
-          <div class="pj-row"><dt>问题</dt><dd>企业原有英文站缺内容更新的入口：博客只有列表、没有详情页，新品和技术文章发不出去，海外客户搜关键词进不来。</dd></div>
+          <div class="pj-row"><dt>问题</dt><dd>企业原有英文站缺少技术文章详情页：博客只有列表，新品与技术内容没有可发布、可被收录的落地页——<b>内容发布与搜索引擎优化（SEO）的入口都不足</b>。</dd></div>
           <div class="pj-row"><dt>我做了</dt><dd>在既有模板上新增<b>博客模块</b>——列表页重排，加 5 篇技术文章详情页（选型指南、减速机选型、齿轮模数、行业趋势、联轴节），统一版式与配图，接好导航与文章互链。</dd></div>
           <div class="pj-row"><dt>核心实现</dt><dd>沿用站点原有的 Bootstrap + GSAP（ScrollTrigger、SplitText）滚动动效体系，<b>不引入新框架</b>，保证新旧页面风格一致；每篇文章单独写 title 与 description，配图按原始比例裁切。</dd></div>
           <div class="pj-row pj-result"><dt>结果</dt><dd>已上线并绑定独立域名，<b>14 个内容页面</b>（9 个主页面 + 5 篇博客）；现在访问 gtit.cc 返回 200。</dd></div>
@@ -401,7 +409,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
       <article class="pj reveal">
         <div>
           <span class="pj-id">02</span>
-          <h3>HB Digital · 本站</h3>
+          <h3>HB Digital · 本站 <span class="pj-kind">个人项目</span></h3>
           <p class="line">没有服务器，也要有完整的提交流程</p>
           <p class="pj-tech">HTML · CSS · JavaScript · GitHub Actions<br>GitHub REST API · Three.js</p>
           <div class="pj-links">
@@ -432,6 +440,9 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/InsightAgent" target="_blank" rel="noopener">源码</a>
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/InsightAgent/actions" target="_blank" rel="noopener">CI 记录</a>
           </div>
+          <a class="pj-shot" href="assets/shot-insight.jpg" target="_blank" rel="noopener" aria-label="放大查看 InsightAgent 运行截图">
+            <img src="assets/shot-insight.jpg" alt="InsightAgent 界面：输入中文问题「哪个产品销售额最高」，返回结论、指标卡与柱状图" loading="lazy">
+          </a>
         </div>
         <dl class="pj-body">
           <div class="pj-row"><dt>问题</dt><dd>不会写 SQL 的人想查数据，只能等会写的人帮忙，来回一轮就是半天。</dd></div>
@@ -451,6 +462,9 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/CodeFix-Agent" target="_blank" rel="noopener">源码</a>
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/CodeFix-Agent/actions" target="_blank" rel="noopener">CI 记录</a>
           </div>
+          <a class="pj-shot dark" href="assets/shot-codefix.jpg" target="_blank" rel="noopener" aria-label="放大查看 CodeFix-Agent 运行输出">
+            <img src="assets/shot-codefix.jpg" alt="CodeFix-Agent 在 demo_data 上运行的真实输出：检出 CF001 折扣计算错误，修复前 0/4 通过、修复后 4/4 通过" loading="lazy">
+          </a>
         </div>
         <dl class="pj-body">
           <div class="pj-row"><dt>问题</dt><dd>代码评审里同类问题反复出现——折扣算反、可变默认参数、浮点直接比较、裸 except，人眼容易漏。</dd></div>
@@ -470,6 +484,9 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/TestPilot" target="_blank" rel="noopener">源码</a>
             <a class="btn btn-outline btn-sm" href="https://github.com/ghb-onb/TestPilot/actions" target="_blank" rel="noopener">CI 记录</a>
           </div>
+          <a class="pj-shot" href="assets/shot-testpilot.jpg" target="_blank" rel="noopener" aria-label="放大查看 TestPilot 接口文档与调用结果">
+            <img src="assets/shot-testpilot.jpg" alt="TestPilot 的 Swagger 接口文档，POST /api/test 真实调用返回 200，响应 case_id 为 tc_login、status 为 passed" loading="lazy">
+          </a>
         </div>
         <dl class="pj-body">
           <div class="pj-row"><dt>问题</dt><dd>接口测试用例靠手写，同样的结构重复很多遍，还容易漏场景。</dd></div>
@@ -594,7 +611,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
   <div class="wrap">
     <div class="box reveal">
       <h2>聊聊实习机会</h2>
-      <p class="lede">2026 年 6 月毕业，可实习 6 个月以上，接受转正。到岗城市：北京 / 天津 / 邯郸。</p>
+      <p class="lede">可实习 6 个月以上，预计实习至 2027 年 6 月，具体到岗时间可沟通。到岗城市：北京 / 天津 / 邯郸。</p>
       <div class="actions">
         <a class="btn btn-fill" href="mailto:2195154945@qq.com?subject=%E5%AE%9E%E4%B9%A0%E6%9C%BA%E4%BC%9A%EF%BC%9A%E8%B4%B5%E6%B5%A9%E6%BB%A8">邮件联系我</a>
         <button class="btn btn-outline" id="openQQ" type="button">加我 QQ</button>
@@ -604,7 +621,7 @@ footer .fnav{display:flex;flex-wrap:wrap;gap:20px}
 
     <div class="contact-rows reveal">
       <div class="row"><span class="label">姓名</span><span class="value">贵浩滨</span></div>
-      <div class="row"><span class="label">求职方向</span><span class="value">Python 开发 / 数据分析 / 测试开发 · 实习</span></div>
+      <div class="row"><span class="label">求职方向</span><span class="value">Python 开发 · 实习</span></div>
       <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com<button class="copy-btn" id="copyEmail">复制</button></span></div>
       <div class="row"><span class="label">电话</span><span class="value">186-3208-1681<button class="copy-btn" id="copyTel">复制</button></span></div>
       <div class="row"><span class="label">QQ</span><span class="value">2195154945<button class="copy-btn" id="copyQQ">复制</button></span></div>
