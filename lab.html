@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="HB Digital 用 Python 与 Power BI 帮个人和小团队解决实际问题：办公自动化、数据处理与分析、Power BI 报表可视化、小工具开发、测试与效率提升。">
+<meta property="og:title" content="HB Digital | 用 Python 帮你解决麻烦">
+<meta property="og:description" content="把重复、繁琐、耗时的活交给代码。Python 自动化 / 数据处理 / 可视化 / 效率工具。">
+<meta property="og:type" content="website">
+<title>3D 实验室 · HB Digital</title>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23020617'/%3E%3Ctext x='50' y='68' font-size='56' font-family='Arial' font-weight='700' fill='%2338bdf8' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --bg:#020617;
+  --bg-soft:#0f172a;
+  --accent:#38bdf8;
+  --accent-2:#2563eb;
+  --text:#ffffff;
+  --muted:#cbd5e1;
+  --faint:#94a3b8;
+  --border:rgba(255,255,255,.08);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Poppins','Noto Sans SC',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+/* 3D 背景画布 + 阅读遮罩 */
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;}
+#veil{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 82% 62% at 50% 42%,rgba(2,6,23,.6),rgba(2,6,23,.34) 55%,rgba(2,6,23,.05) 100%);
+}
+section,footer{position:relative;z-index:1;}
+
+/* 兜底背景（无 WebGL / 加载失败） */
+body.no-webgl{
+  background:
+    radial-gradient(circle at 20% 20%,rgba(37,99,235,.25),transparent 42%),
+    radial-gradient(circle at 82% 78%,rgba(56,189,248,.16),transparent 42%),
+    var(--bg);
+}
+
+/* 顶部导航 */
+header{
+  position:fixed;top:0;left:0;width:100%;
+  padding:18px 8%;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(2,6,23,.55);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;transition:padding .3s;
+}
+.logo{font-size:26px;font-weight:700;color:var(--accent);letter-spacing:.5px;display:flex;align-items:center;gap:10px;}
+.logo .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent);}
+nav{display:flex;align-items:center;gap:30px;}
+nav a{color:var(--text);text-decoration:none;font-size:15px;position:relative;transition:color .3s;}
+nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--accent);transition:width .3s;}
+nav a:hover{color:var(--accent);}
+nav a:hover::after{width:100%;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:0;padding:6px;}
+.hamburger span{width:26px;height:2px;background:var(--text);transition:.3s;border-radius:2px;}
+
+.mobile-menu{
+  position:fixed;inset:0;background:rgba(2,6,23,.97);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:28px;z-index:999;transform:translateY(-100%);transition:transform .35s ease;
+}
+.mobile-menu.open{transform:translateY(0);}
+.mobile-menu a{color:var(--text);font-size:24px;text-decoration:none;}
+.mobile-menu a:hover{color:var(--accent);}
+
+/* Hero */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:120px 20px 60px;
+}
+.hero .badge{
+  display:inline-block;padding:8px 18px;border:1px solid var(--border);
+  border-radius:999px;font-size:13px;color:var(--muted);margin-bottom:28px;
+  background:rgba(255,255,255,.04);backdrop-filter:blur(8px);
+}
+.hero h1{font-size:clamp(40px,8vw,76px);line-height:1.08;font-weight:700;margin-bottom:22px;text-shadow:0 3px 24px rgba(0,0,0,.55);}
+.hero h1 .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb,#a855f7);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;
+  filter:drop-shadow(0 0 24px rgba(56,189,248,.45));
+}
+@keyframes shine{to{background-position:200% center;}}
+.hero p{font-size:clamp(16px,2.4vw,22px);color:var(--muted);max-width:680px;margin-bottom:38px;text-shadow:0 1px 12px rgba(0,0,0,.6);}
+.hero .cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+
+.btn{display:inline-block;padding:15px 34px;border-radius:12px;text-decoration:none;font-weight:600;font-size:15px;transition:.3s;}
+.btn-primary{background:var(--accent-2);color:#fff;box-shadow:0 0 24px rgba(37,99,235,.5);}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(37,99,235,.7);}
+.btn-outline{border:2px solid var(--accent);color:var(--accent);}
+.btn-outline:hover{background:var(--accent);color:var(--bg);transform:translateY(-3px);}
+
+/* 通用区块 */
+section{padding:110px 10%;}
+.section-title{font-size:clamp(32px,5vw,46px);text-align:center;margin-bottom:56px;font-weight:700;text-shadow:0 2px 18px rgba(0,0,0,.65);}
+.section-title .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(56,189,248,.35);
+}
+.about{
+  max-width:860px;margin:auto;text-align:center;font-size:18px;color:var(--muted);
+  background:rgba(15,23,42,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  padding:40px;border-radius:22px;border:1px solid var(--border);
+  text-shadow:0 1px 10px rgba(0,0,0,.5);
+}
+.about strong{color:var(--text);}
+
+/* 玻璃卡片 */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;}
+.card{
+  background:rgba(15,23,42,.5);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:34px;border-radius:20px;border:1px solid var(--border);
+  transition:transform .2s ease-out,border-color .3s,box-shadow .3s;
+  transform-style:preserve-3d;
+}
+.card:hover{border-color:var(--accent);box-shadow:0 22px 50px rgba(56,189,248,.18);}
+.card .icon{
+  width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  background:rgba(56,189,248,.14);color:var(--accent);margin-bottom:18px;
+}
+.card h3{margin-bottom:12px;font-size:20px;color:var(--text);}
+.card p{color:var(--muted);font-size:15px;}
+
+.features{gap:20px;}
+.feature{
+  background:rgba(15,23,42,.5);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:30px;border-radius:20px;text-align:center;border:1px solid var(--border);
+  transition:transform .2s ease-out,border-color .3s,box-shadow .3s;
+  transform-style:preserve-3d;
+}
+.feature:hover{border-color:var(--accent);box-shadow:0 18px 42px rgba(56,189,248,.16);}
+.feature .icon{margin:0 auto 14px;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(37,99,235,.16);color:var(--accent);}
+.feature h3{color:var(--text);margin-bottom:8px;font-size:18px;}
+.feature p{color:var(--muted);font-size:14px;}
+
+/* 创始人 */
+.founder{
+  max-width:780px;margin:auto;text-align:center;
+  background:rgba(15,23,42,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  padding:54px 40px;border-radius:26px;border:1px solid var(--border);
+}
+.avatar{
+  width:120px;height:120px;border-radius:50%;margin:0 auto 22px;
+  object-fit:cover;display:block;
+  border:3px solid rgba(56,189,248,.5);
+  box-shadow:0 0 36px rgba(56,189,248,.5);
+}
+.founder h3{font-size:30px;margin-bottom:6px;}
+.founder .role{color:var(--accent);margin-bottom:20px;font-size:15px;letter-spacing:.5px;}
+.founder p{color:var(--muted);}
+
+/* 联系 */
+.contact-box{
+  max-width:680px;margin:auto;padding:50px;
+  background:rgba(15,23,42,.55);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-radius:26px;border:1px solid var(--border);
+}
+.contact-box .row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;}
+.contact-box .row:last-child{border-bottom:0;}
+.contact-box .label{color:var(--faint);font-size:14px;}
+.contact-box .value{color:var(--text);font-size:16px;font-weight:500;text-align:right;}
+
+/* 联系区：客户通道（邮件）+ 技术通道（公开反馈） */
+.cta-box{
+  max-width:820px;margin:0 auto 30px;text-align:center;
+  padding:36px 30px;border-radius:22px;
+  background:linear-gradient(160deg,rgba(14,24,44,.84),rgba(8,14,28,.78));
+  border:1px solid rgba(56,189,248,.28);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 24px 60px rgba(2,8,24,.6),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.cta-box h3{font-size:clamp(20px,3vw,27px);margin-bottom:12px;}
+.cta-box h3 .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb,#a855f7);
+  background-size:200% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 6s linear infinite;
+}
+.cta-box p{color:var(--muted);font-size:15px;max-width:580px;margin:0 auto 24px;}
+.cta-box .note{
+  font-size:12.5px;color:var(--faint);margin:20px auto 0;line-height:1.75;
+  padding-top:18px;border-top:1px solid var(--border);
+}
+.cta-box .note b{color:var(--muted);}
+.cta-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+/* 架构分层 + 数据看板 */
+.stack-wrap{max-width:1020px;margin:0 auto;}
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px;margin-bottom:26px;}
+.layer{
+  padding:22px 18px;border-radius:16px;border:1px solid var(--border);
+  background:rgba(10,18,34,.72);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  text-align:center;transition:.3s;
+}
+.layer:hover{border-color:rgba(56,189,248,.5);transform:translateY(-4px);box-shadow:0 18px 40px rgba(56,189,248,.14);}
+.layer .n{font-size:11px;letter-spacing:1.6px;color:var(--accent);margin-bottom:10px;font-weight:600;}
+.layer h4{font-size:16px;margin-bottom:8px;}
+.layer p{font-size:13px;color:var(--faint);line-height:1.65;}
+.layer .tech{margin-top:12px;font-size:11.5px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+
+.dash{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  padding:26px 22px;border-radius:18px;border:1px solid var(--border);
+  background:rgba(10,18,34,.74);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.dash .cell{text-align:center;}
+.dash .cell .v{
+  font-size:clamp(22px,3.4vw,30px);font-weight:700;color:var(--accent);
+  font-variant-numeric:tabular-nums;text-shadow:0 0 24px rgba(56,189,248,.45);
+}
+.dash .cell .k{font-size:12px;color:var(--faint);margin-top:6px;}
+.dash-foot{text-align:center;font-size:12px;color:var(--faint);margin-top:16px;line-height:1.8;}
+.dash-foot a{color:var(--muted);text-decoration:underline;text-underline-offset:3px;}
+
+@media(max-width:640px){
+  .dash{grid-template-columns:repeat(2,1fr);gap:22px 10px;}
+  .cta-box{padding:28px 18px;}
+  .cta-box .note{font-size:12px;}
+}
+.copy-btn{background:rgba(56,189,248,.14);color:var(--accent);border:1px solid var(--border);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;transition:.3s;}
+.copy-btn:hover{background:var(--accent);color:var(--bg);}
+
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--faint);font-size:14px;text-shadow:0 1px 8px rgba(0,0,0,.6);}
+footer .grad{
+  background:linear-gradient(120deg,#38bdf8,#2563eb);
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600;
+}
+
+#toTop{
+  position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;
+  background:var(--accent-2);color:#fff;border:0;cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:.3s;z-index:900;box-shadow:0 10px 24px rgba(37,99,235,.6);
+}
+#toTop.show{opacity:1;visibility:visible;}
+#toTop:hover{transform:translateY(-3px);}
+
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+@media(max-width:768px){
+  nav{display:none;}
+  .hamburger{display:flex;}
+  section{padding:80px 7%;}
+  .hero{padding-top:100px;}
+  .contact-box .row{flex-direction:column;align-items:flex-start;gap:4px;}
+  .contact-box .value{text-align:left;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .hero h1 .grad{animation:none;}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+<div id="veil"></div>
+
+<header id="header">
+  <div class="logo"><span class="dot"></span>HB Digital</div>
+  <nav>
+    <a href="#about">关于</a>
+    <a href="#services">服务</a>
+    <a href="#why">优势</a>
+    <a href="#founder">创始人</a>
+    <a href="#stack">架构</a>
+    <a href="#contact">联系</a>
+  </nav>
+  <button class="hamburger" id="hamburger" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">关于</a>
+  <a href="#services">服务</a>
+  <a href="#why">优势</a>
+  <a href="#founder">创始人</a>
+  <a href="#contact">联系</a>
+</div>
+
+<section class="hero">
+  <span class="badge">🐍 Python · Power BI 问题解决专家</span>
+  <h1>用 Python<br><span class="grad">帮你解决麻烦</span></h1>
+  <p>把重复、繁琐、耗时的活交给代码。无论是数据整理、办公自动化、小工具开发，还是测试与效率提升，我都用 Python 帮你落地解决。</p>
+  <div class="cta">
+    <a href="#contact" class="btn btn-primary">聊聊需求</a>
+    <a href="#services" class="btn btn-outline">看看能做什么</a>
+  </div>
+</section>
+
+<section id="about" class="reveal">
+  <h2 class="section-title">关于 <span class="grad">HB Digital</span></h2>
+  <div class="about">
+    HB Digital 由贵浩滨创立，专注用 Python 帮个人和小团队解决实际问题。我们相信，很多让人头疼的重复劳动，都能用几十行代码搞定。
+    无论你是学生、职场人、运营还是创业者，只要手头有「不想手动做」的事，都可以交给我们。从 Python 脚本到 Power BI 仪表盘，我们把数据和流程变成省心的工具。
+    <br><br>
+    我们的使命：<strong>用技术帮每个人把时间花在更重要的事上。</strong>
+  </div>
+</section>
+
+<section id="services" class="reveal">
+  <h2 class="section-title">我们的 <span class="grad">服务</span></h2>
+  <div class="grid">
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg>
+      </div>
+      <h3>办公自动化</h3>
+      <p>批量处理 Excel / Word / PDF、自动填表、定时任务，把手工活变一键完成。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7"/><rect x="12" y="7" width="3" height="11"/><rect x="17" y="13" width="3" height="5"/></svg>
+      </div>
+      <h3>数据处理与分析</h3>
+      <p>清洗、整理、可视化你的数据，用图表和报表把结论说清楚。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+      </div>
+      <h3>小工具 / 网页开发</h3>
+      <p>把你的需求做成一个能用的小程序或网页，随用随取、随手解决问题。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M21 12v6a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h9"/></svg>
+      </div>
+      <h3>测试与效率提升</h3>
+      <p>脚本化测试、接口校验、流程自动化，减少人为出错、提升交付速度。</p>
+    </div>
+    <div class="card">
+      <div class="icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="12" y="6" width="3" height="12" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg>
+      </div>
+      <h3>Power BI 报表可视化</h3>
+      <p>把杂乱数据做成可交互仪表盘，指标一目了然，让汇报和决策更省心。</p>
+    </div>
+  </div>
+</section>
+
+<section id="why" class="reveal">
+  <h2 class="section-title">为什么选择 <span class="grad">HB Digital</span></h2>
+  <div class="grid features">
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h3>踏实可靠</h3>
+      <p>需求聊清楚再动手，交付能用、好维护</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
+      <h3>按需定制</h3>
+      <p>不套模板，按你的实际场景写代码</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
+      <h3>效率优先</h3>
+      <p>目标就是帮你省时间、少出错</p>
+    </div>
+    <div class="feature">
+      <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <h3>长期支持</h3>
+      <p>用完有问题，继续帮你调</p>
+    </div>
+  </div>
+</section>
+
+<section id="founder" class="reveal">
+  <h2 class="section-title">创始人 <span class="grad">Founder</span></h2>
+  <div class="founder">
+    <img class="avatar" src="avatar.jpg" alt="贵浩滨">
+    <h3>贵浩滨</h3>
+    <div class="role">Founder &amp; Python Developer</div>
+    <p>
+      河北工程大学 · 信息与计算科学专业<br><br>
+      擅长：Python 自动化 / 数据分析 / Power BI 可视化 / 测试开发<br><br>
+      希望用代码帮更多人从重复劳动里解放出来。
+    </p>
+  </div>
+</section>
+
+<section id="stack" class="reveal">
+  <h2 class="section-title">这个网站<span class="grad">怎么跑起来的</span></h2>
+  <div class="stack-wrap">
+    <div class="stack-grid">
+      <div class="layer">
+        <div class="n">01 / 展示层</div>
+        <h4>静态前端</h4>
+        <p>无框架的轻量页面，Three.js 实时渲染太空背景，GitHub Pages 免费托管。</p>
+        <div class="tech">HTML · CSS · Three.js</div>
+      </div>
+      <div class="layer">
+        <div class="n">02 / 数据层</div>
+        <h4>Issues 当数据库</h4>
+        <p>本站的公开技术反馈就是一条 Issue，自带标签、时间戳、评论与状态流转，检索分页开箱可用。</p>
+        <div class="tech">GitHub Issues API</div>
+      </div>
+      <div class="layer">
+        <div class="n">03 / 鉴权层</div>
+        <h4>最小权限令牌</h4>
+        <p>管理台只持一个仅能读写本仓库 Issues 的细粒度令牌，存在标签页的 sessionStorage，关页即失效。令牌会随每次管理请求发给 GitHub API 由服务端鉴权，前端不留长期凭证。</p>
+        <div class="tech">Fine-grained PAT · sessionStorage</div>
+      </div>
+      <div class="layer">
+        <div class="n">04 / 计算层</div>
+        <h4>服务端校验 + 双路径聚合</h4>
+        <p>Issue Forms 在提交时校验必填项并自动打标；看板优先读 Actions 聚合出的 stats.json 快照，快照缺失时才匿名读公开 Issues 自行汇总。</p>
+        <div class="tech">Issue Forms · stats.json 快照 · 匿名 API 兜底</div>
+      </div>
+    </div>
+    <div class="dash">
+      <div class="cell"><div class="v" id="dTotal">—</div><div class="k">累计反馈</div></div>
+      <div class="cell"><div class="v" id="dPending">—</div><div class="k">待处理</div></div>
+      <div class="cell"><div class="v" id="dClosed">—</div><div class="k">已处理</div></div>
+      <div class="cell"><div class="v" id="dWeek">—</div><div class="k">本周新增</div></div>
+    </div>
+    <p class="dash-foot">
+      数据来自仓库 Issues 的真实聚合，非手工填写 · <a href="admin.html">进入管理后台 →</a>
+    </p>
+  </div>
+</section>
+
+<section id="contact" class="reveal">
+  <h2 class="section-title">联系 <span class="grad">我们</span></h2>
+  <div class="cta-box">
+    <h3>有技术需求？<span class="grad">直接联系我</span></h3>
+    <p>描述你遇到的问题，我会根据实际需求评估方案。不需要注册任何账号，内容也不会出现在公开页面上。</p>
+    <div class="cta-actions">
+      <a class="btn btn-primary" href="mailto:2195154945@qq.com?subject=%E9%9C%80%E6%B1%82%E5%92%A8%E8%AF%A2">✉️ 邮件联系我</a>
+      <a class="btn btn-outline" href="https://github.com/ghb-onb/hb-digital/issues/new?template=feedback.yml" target="_blank" rel="noopener">🐞 技术反馈（公开）</a>
+    </div>
+    <p class="note">
+      左边是<b>客户通道</b>：邮件内容私密，可以发截图和附件，适合聊具体需求。<br>
+      右边是<b>技术反馈通道</b>：公开的，只用来报告本站 Bug 或提建议——请勿在其中填写手机号、公司资料等敏感信息。
+    </p>
+  </div>
+  <div class="contact-box">
+    <div class="row"><span class="label">品牌</span><span class="value">HB Digital</span></div>
+    <div class="row"><span class="label">创始人</span><span class="value">贵浩滨</span></div>
+    <div class="row"><span class="label">Email</span><span class="value">2195154945@qq.com <button class="copy-btn" id="copyEmail">复制</button></span></div>
+    <div class="row"><span class="label">业务方向</span><span class="value">Python &amp; Power BI 技术解决方案 · 自动化 / 数据处理 / 可视化 / 效率工具</span></div>
+    <div class="row"><span class="label">Slogan</span><span class="value">用 Python 把麻烦交给我们</span></div>
+  </div>
+</section>
+
+<footer>
+  HB Digital © 2026<br>
+  <span class="grad">用 Python 把麻烦交给我们</span>
+  <div style="margin-top:14px;font-size:12px;">
+    <a href="admin.html" style="color:var(--faint);text-decoration:none;border-bottom:1px dashed rgba(148,163,184,.45);padding-bottom:1px;">管理后台</a>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="回到顶部">↑</button>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+function boot(){
+  const canvas=document.getElementById('bg');
+  let renderer;
+  try{ renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false}); }
+  catch(e){ document.body.classList.add('no-webgl'); return; }
+
+  const isMobile=window.innerWidth<768;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.15;
+
+  const scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x020617);
+  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
+  camera.position.set(0,4,40);
+
+  // ---- 螺旋银河系 ----
+  function makeGalaxy(){
+    const count=isMobile?3500:8000;
+    const radius=40, branches=4, spin=1.05, randomness=0.32, rPow=2.6;
+    const pos=new Float32Array(count*3), col=new Float32Array(count*3);
+    const cIn=new THREE.Color('#ffd9a0'), cMid=new THREE.Color('#a855f7'), cOut=new THREE.Color('#3b82f6');
+    for(let i=0;i<count;i++){
+      const r=Math.random()*radius;
+      const branch=(i%branches)/branches*Math.PI*2;
+      const sp=r*spin;
+      const rp=()=>Math.pow(Math.random(),rPow)*(Math.random()<.5?1:-1)*randomness*(r+0.8);
+      pos[i*3]=Math.cos(branch+sp)*r+rp();
+      pos[i*3+1]=rp()*0.45;
+      pos[i*3+2]=Math.sin(branch+sp)*r+rp();
+      const t=r/radius;
+      const c=cIn.clone().lerp(cMid,t*0.5).lerp(cOut,t);
+      col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    g.setAttribute('color',new THREE.BufferAttribute(col,3));
+    const m=new THREE.PointsMaterial({size:0.22,depthWrite:false,blending:THREE.AdditiveBlending,vertexColors:true,transparent:true,opacity:0.85});
+    return new THREE.Points(g,m);
+  }
+  const galaxy=makeGalaxy();
+  galaxy.rotation.x=0.55;
+  scene.add(galaxy);
+
+  // ---- 发光银河核心（配合 Bloom 溢光）----
+  const coreGlow=new THREE.Mesh(
+    new THREE.SphereGeometry(1.5,20,20),
+    new THREE.MeshBasicMaterial({color:0xffe0b0,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false})
+  );
+  scene.add(coreGlow);
+
+  // ---- 远景星空 ----
+  (function(){
+    const n=isMobile?900:2000; const pos=new Float32Array(n*3);
+    for(let i=0;i<n;i++){
+      const r=120+Math.random()*160;
+      const t=Math.random()*Math.PI*2, p=Math.acos(2*Math.random()-1);
+      pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.sin(p)*Math.sin(t); pos[i*3+2]=r*Math.cos(p);
+    }
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const m=new THREE.PointsMaterial({color:0xffffff,size:0.5,transparent:true,opacity:0.6,depthWrite:false});
+    scene.add(new THREE.Points(g,m));
+  })();
+
+  // ---- 火箭 ----
+  function makeRocket(){
+    const r=new THREE.Group();
+    const white=new THREE.MeshBasicMaterial({color:0xf1f5f9});
+    const blue=new THREE.MeshBasicMaterial({color:0x2563eb});
+    const glass=new THREE.MeshBasicMaterial({color:0x38bdf8});
+    const body=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.55,2.6,20),white);
+    const nose=new THREE.Mesh(new THREE.ConeGeometry(0.5,1.2,20),white); nose.position.y=1.9;
+    const win=new THREE.Mesh(new THREE.SphereGeometry(0.22,16,16),glass); win.position.set(0,0.5,0.46);
+    r.add(body,nose,win);
+    for(let i=0;i<3;i++){
+      const fin=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.9,0.55),blue);
+      const a=i/3*Math.PI*2;
+      fin.position.set(Math.cos(a)*0.5,-1.1,Math.sin(a)*0.5);
+      fin.rotation.y=-a; fin.rotation.x=0.3; r.add(fin);
+    }
+    const flame=new THREE.Mesh(new THREE.ConeGeometry(0.4,2.2,18),new THREE.MeshBasicMaterial({color:0xff7a18,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false}));
+    flame.position.y=-2.1; flame.rotation.x=Math.PI; r.add(flame);
+    const flame2=new THREE.Mesh(new THREE.ConeGeometry(0.22,1.3,16),new THREE.MeshBasicMaterial({color:0xffe08a,transparent:true,opacity:1,blending:THREE.AdditiveBlending,depthWrite:false}));
+    flame2.position.y=-1.7; flame2.rotation.x=Math.PI; r.add(flame2);
+    r.userData={flame,flame2,speed:0.12};
+    return r;
+  }
+  const rocket=makeRocket();
+  function resetRocket(){ const side=Math.random()<.5?-1:1; rocket.position.set(side*(15+Math.random()*10),-34,-6); rocket.userData.speed=0.12; rocket.rotation.z=(Math.random()-0.5)*0.2; }
+  resetRocket();
+  scene.add(rocket);
+
+  // ---- 流星 ----
+  const shooting=[];
+  for(let i=0;i<3;i++){
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(6),3));
+    const m=new THREE.LineBasicMaterial({color:0x9fd8ff,transparent:true,opacity:0.9,blending:THREE.AdditiveBlending});
+    const line=new THREE.Line(g,m);
+    line.userData={active:false,t:0};
+    scene.add(line); shooting.push(line);
+  }
+  function launchShooting(){
+    const s=shooting.find(x=>!x.userData.active); if(!s) return;
+    s.userData={active:true,t:0,ox:(Math.random()-0.5)*60,oy:10+Math.random()*30,oz:-20-Math.random()*30};
+  }
+  let shootTimer=1.5;
+
+  // ---- 鼠标视差 ----
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',e=>{ mx=e.clientX/window.innerWidth-0.5; my=e.clientY/window.innerHeight-0.5; });
+
+  // ---- Bloom 后处理（PC 端）----
+  let composer=null, bloom=null;
+  if(!isMobile){
+    composer=new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene,camera));
+    bloom=new UnrealBloomPass(new THREE.Vector2(window.innerWidth,window.innerHeight),1.25,0.85,0.15);
+    composer.addPass(bloom);
+  }
+
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const dt=Math.min(clock.getDelta(),0.05); const t=clock.elapsedTime;
+    tx+=(mx-tx)*0.05; ty+=(my-ty)*0.05;
+
+    galaxy.rotation.y+=0.06*dt;
+    coreGlow.scale.setScalar(1+Math.sin(t*1.6)*0.08);
+
+    rocket.userData.speed+=0.18*dt;
+    rocket.position.y+=rocket.userData.speed;
+    rocket.position.x+=Math.sin(t*1.5)*0.02;
+    rocket.rotation.z+=Math.sin(t*3)*0.002;
+    const fl=1+Math.sin(t*40)*0.18; rocket.userData.flame.scale.y=fl; rocket.userData.flame2.scale.y=fl;
+    if(rocket.position.y>46) resetRocket();
+
+    shootTimer-=dt; if(shootTimer<=0){ launchShooting(); shootTimer=2+Math.random()*3; }
+    shooting.forEach(s=>{
+      if(!s.userData.active) return;
+      s.userData.t+=dt*0.9; const k=s.userData.t; const a=s.userData;
+      const dx=-22*k, dy=-14*k, len=6;
+      const arr=s.geometry.attributes.position.array;
+      arr[0]=a.ox+dx; arr[1]=a.oy+dy; arr[2]=a.oz;
+      arr[3]=a.ox+dx-len; arr[4]=a.oy+dy+len*0.6; arr[5]=a.oz;
+      s.geometry.attributes.position.needsUpdate=true;
+      s.material.opacity=Math.max(0,0.9-k);
+      if(k>=1) s.userData.active=false;
+    });
+
+    if(bloom) bloom.strength=1.25+Math.sin(t*1.2)*0.18;
+
+    camera.position.x=tx*5; camera.position.y=4-ty*5;
+    camera.lookAt(0,0,0);
+
+    if(composer) composer.render(); else renderer.render(scene,camera);
+  }
+  animate();
+
+  window.addEventListener('resize',()=>{
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    if(composer) composer.setSize(window.innerWidth,window.innerHeight);
+  });
+
+  window.__hb3d=true;
+}
+boot();
+</script>
+
+<script>
+// 加载失败兜底：4 秒后若 3D 未初始化则用渐变背景
+setTimeout(function(){ if(!window.__hb3d){ document.body.classList.add('no-webgl'); } },4000);
+
+// ===== 3D 倾斜卡片（桌面端） =====
+(function(){
+  if(window.innerWidth<768) return;
+  document.querySelectorAll('.card,.feature').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-0.5;
+      const py=(e.clientY-r.top)/r.height-0.5;
+      el.style.transform=`perspective(800px) rotateY(${px*12}deg) rotateX(${-py*12}deg) translateY(-6px)`;
+    });
+    el.addEventListener('mouseleave',()=>{el.style.transform='';});
+  });
+})();
+
+// ===== 交互：菜单 / 入场 / 回到顶部 / 复制 / 导航收缩 =====
+(function(){
+  const hamburger=document.getElementById('hamburger');
+  const mobileMenu=document.getElementById('mobileMenu');
+  hamburger.addEventListener('click',()=>mobileMenu.classList.toggle('open'));
+  mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mobileMenu.classList.remove('open')));
+
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const toTop=document.getElementById('toTop');
+  const header=document.getElementById('header');
+  window.addEventListener('scroll',()=>{
+    toTop.classList.toggle('show',window.scrollY>400);
+    header.style.padding=window.scrollY>50?'12px 8%':'18px 8%';
+  });
+  toTop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+  const copyBtn=document.getElementById('copyEmail');
+  copyBtn.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText('2195154945@qq.com');copyBtn.textContent='已复制';setTimeout(()=>copyBtn.textContent='复制',1500);}
+    catch(err){copyBtn.textContent='复制失败';}
+  });
+})();
+</script>
+
+<script>
+/* 数据看板
+   两条路径，互为兜底：
+   1) 优先读 Actions 定时聚合的 stats.json（静态文件，零 API 消耗）
+   2) 快照缺失或 updatedAt 不是合法日期时，匿名读公开 Issues 自行汇总
+      （带 10 分钟本地缓存，避免同一访客反复请求消耗未认证配额）
+
+   快照是否有效只看 updatedAt，不看 total：
+   真实的「0 条反馈」也是有效数据，必须原样展示。
+   两条路径都拿不到数据时显示「—」，不把未知状态伪装成 0。 */
+(function(){
+  var API = 'https://api.github.com/repos/ghb-onb/hb-digital/issues';
+  var LABEL = '反馈';
+  var CACHE_KEY = 'hb_dash_v1';
+  var TTL = 10 * 60 * 1000;
+  var UNKNOWN = '—';
+
+  function set(id, v){
+    var el = document.getElementById(id);
+    if (el) el.textContent = v;
+  }
+  function num(v){
+    return (typeof v === 'number' && isFinite(v)) ? v : UNKNOWN;
+  }
+  function paint(d){
+    set('dTotal',   num(d.total));
+    set('dPending', num(d.pending));
+    set('dClosed',  num(d.closed));
+    set('dWeek',    num(d.week));
+  }
+  function unavailable(){
+    set('dTotal', UNKNOWN);
+    set('dPending', UNKNOWN);
+    set('dClosed', UNKNOWN);
+    set('dWeek', UNKNOWN);
+  }
+
+  /* 有效快照 = 有 updatedAt 且能被解析成真实日期。
+     未生成过（null）或占位值一律视为无效，走实时兜底。 */
+  function hasValidSnapshot(s){
+    if (!s || typeof s !== 'object' || !s.updatedAt) return false;
+    var t = Date.parse(s.updatedAt);
+    return !isNaN(t);
+  }
+
+  function live(){
+    var now = Date.now();
+    try {
+      var c = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+      if (c && now - c.at < TTL) { paint(c.d); return; }
+    } catch (e) { /* 隐私模式下 sessionStorage 不可用，忽略 */ }
+
+    fetch(API + '?labels=' + encodeURIComponent(LABEL) + '&state=all&per_page=100', {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    })
+      .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(list){
+        list = (list || []).filter(function(i){ return !i.pull_request; });
+        var d = {
+          total: list.length,
+          closed: list.filter(function(i){ return i.state === 'closed'; }).length,
+          pending: list.filter(function(i){ return i.state !== 'closed'; }).length,
+          week: list.filter(function(i){ return now - new Date(i.created_at).getTime() < 7 * 864e5; }).length
+        };
+        paint(d);
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: now, d: d })); } catch (e) {}
+      })
+      .catch(unavailable);
+  }
+
+  fetch('stats.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(s){
+      if (hasValidSnapshot(s)) {
+        paint({ total: s.total, pending: s.open, closed: s.closed, week: s.thisWeek });
+      } else {
+        live();
+      }
+    })
+    .catch(live);
+})();
+</script>
+
+<a href="index.html" id="backHome">← 返回主页</a>
+<style>
+#backHome{position:fixed;left:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;
+  padding:10px 18px;border-radius:980px;background:rgba(255,255,255,.94);color:#1d1d1f;
+  font:500 14px/1 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;text-decoration:none;
+  box-shadow:0 2px 12px rgba(0,0,0,.18);backdrop-filter:blur(12px);
+  transition:transform .2s ease,box-shadow .2s ease}
+#backHome:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.26)}
+@media(prefers-reduced-motion:reduce){#backHome{transition:none}}
+</style>
+</body>
+</html>
