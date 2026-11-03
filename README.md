@@ -24,7 +24,7 @@
 
 | 层 | 承担者 | 具体实现 |
 |---|---|---|
-| 展示层 | GitHub Pages | 无框架静态页面 + Three.js 实时渲染太空背景 |
+| 展示层 | GitHub Pages | 无框架静态页面（主页为 Apple 风格极简排版）+ 独立 3D 实验页（Three.js 太空场景、Bloom 辉光） |
 | 数据层 | GitHub Issues | 每条技术反馈 = 一条 Issue，自带标签、时间戳、评论、状态机、分页与检索 |
 | 鉴权层 | Fine-grained PAT | 仅授权本仓库 Issues 读写，存在标签页的 `sessionStorage`，关页即失效 |
 | 计算层 | Issue Forms + 前端聚合 | 服务端校验必填项并自动打标；看板读静态快照，缺失时匿名聚合兜底 |
